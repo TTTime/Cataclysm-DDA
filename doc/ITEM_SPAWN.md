@@ -1,7 +1,7 @@
 Item spawn system:
 =====
 
-Collection or Distribution:
+1. Collection or Distribution:
 ====
 
 In a Collection each entry is chosen independently from the other entries. Therefor the probability associated with each entry is absolute, in the range of 0...1. In the json files it is implemented as percentage with values from 0 to 100.
@@ -10,20 +10,47 @@ A probability of 0 (or negative) means the entry is never chosen, a probability 
 
 A Distribution is a weighted list like the current system. Exactly one entry is chosen from it. The probability of each entry is relative to the probability of the other entries. A probability of 0 (or negative) means it is never chosen.
 
+An example: Suppose item A has a probability of 30 and item B has a probability of 20. Then the probabilities of the 4 combinations of A and B are:
+
+Combination     | Collection | Distribution
+---------------------------------------
+Neither A nor B | 56%        | 0%
+Only A          | 24%        | 60%
+Only B          | 14%        | 40%
+Both A and B    | 6%         | 0%
+
+2. Format:
+====
+
 The format is this:
 ```
 {
     "type": "item_group",
     "subtype": "<subtype>",
     "id": "<some name>",
+    "ammo": <some number>,
+    "magazine": <some number>,
     "entries": [ ... ]
 }
 ```
-`subtype` defaults to `old`, which denotes that this item group uses the old format (which is technically a distribution).
 
-`subtype` can be `collection` or `distribution`.
+`subtype` is optional. It can be "collection" or "distribution". If unspecified, it defaults to `old`,
+which denotes that this item group uses the old format (which is technically a distribution).
 
-The `entries` list contains entries, each entry can be one of this:
+`ammo` specifies the percent chance that the entries will spawn fully loaded (if it needs a magazine, it will be added for you).
+`magazine` specifies the percent chance that the entries will spawn with a magazine.
+Both of these default to 0 if unspecified.
+
+Note that `ammo` and `magazine` only apply to tools, guns, and magazines. Furthermore, they don't apply to items whose entry explicitly specifies
+how much ammo (charges) to spawn with, or to tools whose JSON item definition specifies a random amount or a fixed, nonzero amount of
+initial charges.
+
+If the entries array contains an item group, then the outermost ammo and magazine chances are used.
+
+3. The Entries Array
+====
+
+The `entries` list contains entries, each entry can be one of the following:
 ```
 { "item": "<item-id>", ... }
 ```
@@ -31,18 +58,30 @@ or
 ```
 { "group": "<group-id>", ... }
 ```
+or
+```
+{ "distribution": [
+    "An array of entries, each of which can match any of these 4 formats"
+] }
+```
+or
+```
+{ "collection": [
+    "An array of entries, each of which can match any of these 4 formats"
+] }
+```
 
 The game decides based on the existence of either the `item` or the `group` value if the entry denotes a item or a reference to another item group.
 
 Each entry can have more values (shown above as `...`). They allow further properties of the item(s):
 ```
-"damage": <number>,
+"damage": <number>|<array>,
 "damage-min": <number>,
 "damage-max": <number>,
-"count": <number>,
+"count": <number>|<array>,
 "count-min": <number>,
 "count-max": <number>,
-"charges": <number>,
+"charges": <number>|<array>,
 "charges-min": <number>,
 "charges-max": <number>,
 "contents-item": "<item-id>",
@@ -59,13 +98,16 @@ Each entry can have more values (shown above as `...`). They allow further prope
 "damage-min": 0,
 "damage-max": 3,
 "count": 4
+"charges": [10, 100]
 ```
-This will create 4 items, they can have different damage levels as the damage value is rolled separately for each of these items.
+This will create 4 items, they can have different damage levels as the damage value is rolled separately for each of these items. Each item has charges (AKA ammo) in the range of 10 to 100 (inclusive); if the item needs a magazine before it can have charges, that will be taken care of for you. Using an array (which must have 2 entries) for charges/count/damage is equivalent to writing explicit min and max values. In other words `"count": [a,b]` is the same as `"count-min": a, "count-max": b`.
 
 The ammo type is checked and applied only to weapon / gunmods.
 The container is checked and the item is put inside the container, and the charges of the item are capped/increased to match the size of the container.
 
-Some special shortcuts exist also:
+4. Shortcuts:
+====
+
 This:
 ```
 "items": [ "<id-1>", [ "<id-2>", 10 ] ]
@@ -112,8 +154,55 @@ Another example. The group "milk" spawns a container (taken from milk_containers
 },
 ```
 
+5. Inlined item groups
+====
+
+At some places one can define an item group directly instead of giving the id of a group. One can not refer to that group as it has no visible id (it has an unspecific/random id internally). This is most useful when the group is very specific to the place it is used and wont ever appear anywhere else.
+
+As an example: monster death drops ("death_drops" entry in the "MONSTER" object, see JSON_INFO.md) can do this. If the monster is very specific (e.g. a special robot, a unique endgame monster), the item spawned upon its death wont (in that form) appear in any other group.
+
+Therefor this snippet:
+```JSON
+{
+    "type": "item_group",
+    "id": "specific_group_id",
+    "subtype": "distribution",
+    "items": [ "a", "b" ]
+},
+{
+    "death_drops": "specific_group_id"
+}
+```
+is equivalent to:
+
+```JSON
+{
+    "death_drops": {
+        "subtype": "distribution",
+        "items": [ "a", "b" ]
+    }
+}
+```
+
+The inline group is read like any other group and one can use all the properties mentioned above. Its "type" and its "id" members are always ignored.
+
+Instead of a full JSON object, one can also write a JSON array. The default subtype is used and the array is read like the "entries" array (see above). Each entry of that array must be a JSON object. Example:
+```JSON
+{
+    "death_drops": [
+        { "item": "rag", "damage": 2 }, { "item": "bowling_ball" }
+    ]
+}
+```
+
+----
+
 You can test your item groups in the game:
-- enable the debug menu (use '?' -> '1' to go to the keybindings and bind a key to "Debug menu"),
-- load a game and call the debug menu,
-- choose "item spawn debug".
+- load a game and call the debug menu, (If a key isn't bound to the debug menu or you forgot it, use <ESC> -> '1')
+- choose "Test Item Group".
 - select the item group you want to debug. It will spawn items based on that 100 times and count the spawned items. They are displayed, sorted by their frequency.
+- You can filter anything in the debug menu using '/'
+
+----
+
+You should not add items to the item group "EMPTY_GROUP". This group can be used when the game requires a group id, but you don't want to spawn any items there. The group will never spawn items.

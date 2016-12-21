@@ -1,5 +1,5 @@
-#ifndef PATH_INFO_H_INCLUDED
-#define PATH_INFO_H_INCLUDED
+#ifndef PATH_INFO_H
+#define PATH_INFO_H
 
 #include <string>
 #include <map>
@@ -17,12 +17,12 @@ extern std::map<std::string, std::string> FILENAMES;
 
 namespace PATH_INFO
 {
-void init_base_path(std::string path);
-void init_user_dir(const char *ud = "");
-void update_datadir(void);
-void update_config_dir(void);
-void update_pathname(std::string name, std::string path);
-void set_standart_filenames(void);
+void init_base_path( std::string path );
+void init_user_dir( const char *ud = "" );
+void update_datadir( void );
+void update_config_dir( void );
+void update_pathname( std::string name, std::string path );
+void set_standard_filenames( void );
 /**
  * Return a locale specific path, or if there is no path for the current
  * locale, return the default path.
@@ -35,8 +35,8 @@ void set_standart_filenames(void);
  * the key into the @ref FILENAMES map. It is used if no translated file can be
  * found.
  */
-std::string find_translated_file(const std::string &pathid, const std::string &extension,
-                                 const std::string &defaultid);
+std::string find_translated_file( const std::string &pathid, const std::string &extension,
+                                  const std::string &defaultid );
 }
 
-#endif // PATH_INFO_H_INCLUDED
+#endif

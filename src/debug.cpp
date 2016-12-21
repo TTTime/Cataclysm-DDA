@@ -1,19 +1,22 @@
 #include "debug.h"
 #include "path_info.h"
 #include "output.h"
-#include "file_wrapper.h"
+#include "filesystem.h"
 #include <time.h>
+#include <cassert>
 #include <cstdlib>
 #include <cstdarg>
 #include <iosfwd>
 #include <fstream>
 #include <streambuf>
+#include <sys/stat.h>
+#include <exception>
 
 #ifndef _MSC_VER
 #include <sys/time.h>
 #endif
 
-#if !(defined _WIN32 || defined WINDOWS || defined __CYGWIN__)
+#ifdef BACKTRACE
 #include <execinfo.h>
 #include <stdlib.h>
 #endif
@@ -29,18 +32,74 @@ static int debugLevel = D_ERROR;
 static int debugClass = D_MAIN;
 #endif
 
-void realDebugmsg( const char *filename, const char *line, const char *mes, ... )
+extern bool test_mode;
+
+/** When in @ref test_mode will be set if any debugmsg are emitted */
+bool test_dirty = false;
+
+bool debug_mode = false;
+
+namespace
 {
+
+std::set<std::string> ignored_messages;
+
+}
+
+void realDebugmsg( const char *filename, const char *line, const char *funcname, const char *mes,
+                   ... )
+{
+    assert( filename != nullptr );
+    assert( line != nullptr );
+    assert( funcname != nullptr );
+
     va_list ap;
     va_start( ap, mes );
     const std::string text = vstring_format( mes, ap );
     va_end( ap );
-    DebugLog( D_ERROR, D_MAIN ) << filename << ":" << line << " " << text;
-    fold_and_print( stdscr, 0, 0, getmaxx( stdscr ), c_red, "DEBUG: %s\n  Press spacebar...",
-                    text.c_str() );
-    while( getch() != ' ' ) {
-        // wait for spacebar
+
+    if( test_mode ) {
+        test_dirty = true;
+        std::cerr << filename << ":" << line << " [" << funcname << "] " << text << std::endl;
+        return;
     }
+
+    DebugLog( D_ERROR, D_MAIN ) << filename << ":" << line << " [" << funcname << "] " << text;
+
+    std::string msg_key( filename );
+    msg_key += line;
+
+    if( ignored_messages.count( msg_key ) > 0 ) {
+        return;
+    }
+
+    if( stdscr == nullptr ) {
+        std::cerr << text.c_str() << std::endl;
+        abort();
+    }
+
+    fold_and_print( stdscr, 0, 0, getmaxx( stdscr ), c_ltred,
+                    "\n \n" // Looks nicer with some space
+                    " DEBUG    : %s\n \n"
+                    " FUNCTION : %s\n"
+                    " FILE     : %s\n"
+                    " LINE     : %s\n \n"
+                    " Press <color_white>spacebar</color> to continue the game...\n"
+                    " Press <color_white>I</color> (or <color_white>i</color>) to also ignore this particular message in the future...",
+                    text.c_str(), funcname, filename, line );
+
+    for( bool stop = false; !stop; ) {
+        switch( getch() ) {
+            case 'i':
+            case 'I':
+                ignored_messages.insert( msg_key );
+            // Falling through
+            case ' ':
+                stop = true;
+                break;
+        }
+    }
+
     werase( stdscr );
     refresh();
 }
@@ -75,8 +134,7 @@ void *tracePtrs[TRACE_SIZE];
 
 struct NullBuf : public std::streambuf {
     NullBuf() {}
-    int overflow( int c )
-    {
+    int overflow( int c ) override {
         return c;
     }
 };
@@ -125,9 +183,22 @@ void DebugFile::deinit()
 void DebugFile::init( std::string filename )
 {
     this->filename = filename;
+    const std::string oldfile = filename + ".prev";
+    bool rename_failed = false;
+    struct stat buffer;
+    if( stat( filename.c_str(), &buffer ) == 0 ) {
+        // Continue with the old log file if it's smaller than 1 MiB
+        if( buffer.st_size >= 1024 * 1024 ) {
+            rename_failed = !rename_file( filename, oldfile );
+        }
+    }
     file.open( filename.c_str(), std::ios::out | std::ios::app );
     file << "\n\n-----------------------------------------\n";
     currentTime() << " : Starting log.";
+    if( rename_failed ) {
+        DebugLog( D_ERROR, DC_ALL ) << "Moving the previous log file to " << oldfile << " failed.\n" <<
+                                    "Check the file permissions. This program will continue to use the previous log file.";
+    }
 }
 
 void setupDebug()
@@ -231,18 +302,54 @@ std::ostream &operator<<( std::ostream &out, DebugClass cl )
     return out;
 }
 
+struct time_info {
+    int hours;
+    int minutes;
+    int seconds;
+    int mseconds;
+
+    template <typename Stream>
+    friend Stream &operator<<( Stream &out, time_info const &t ) {
+        using char_t = typename Stream::char_type;
+        using base   = std::basic_ostream<char_t>;
+
+        static_assert( std::is_base_of<base, Stream>::value, "" );
+
+        out << t.hours << ':' << t.minutes << ':' << t.seconds << '.' << t.mseconds;
+
+        return out;
+    }
+};
+
+#ifdef _MSC_VER
+time_info get_time() noexcept
+{
+    SYSTEMTIME time {};
+
+    GetLocalTime( &time );
+
+    return time_info { static_cast<int>( time.wHour ), static_cast<int>( time.wMinute ),
+                       static_cast<int>( time.wSecond ), static_cast<int>( time.wMilliseconds )
+                     };
+}
+#else
+time_info get_time() noexcept
+{
+    timeval tv;
+    gettimeofday( &tv, nullptr );
+
+    auto const tt      = time_t {tv.tv_sec};
+    auto const current = localtime( &tt );
+
+    return time_info { current->tm_hour, current->tm_min, current->tm_sec,
+                       static_cast<int>( tv.tv_usec / 1000.0 + 0.5 )
+                     };
+}
+#endif
+
 std::ofstream &DebugFile::currentTime()
 {
-    struct tm *current;
-    timeval tv;
-    time_t tt;
-    gettimeofday( &tv, NULL );
-    tt = tv.tv_sec;
-    current = localtime( &tt );
-
-    file << current->tm_hour << ":" << current->tm_min << ":" <<
-         current->tm_sec << "." << int( tv.tv_usec / 1000 + 0.5 );
-    return file;
+    return ( file << get_time() );
 }
 
 std::ostream &DebugLog( DebugLevel lev, DebugClass cl )
@@ -261,7 +368,7 @@ std::ostream &DebugLog( DebugLevel lev, DebugClass cl )
         debugFile.file << ": ";
 
         // Backtrace on error.
-#if !(defined _WIN32 || defined WINDOWS || defined __CYGWIN__)
+#ifdef BACKTRACE
         if( lev == D_ERROR ) {
             int count = backtrace( tracePtrs, TRACE_SIZE );
             char **funcNames = backtrace_symbols( tracePtrs, count );

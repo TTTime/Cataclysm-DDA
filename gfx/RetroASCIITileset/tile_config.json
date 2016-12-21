@@ -8,10 +8,14 @@
     ],
     "tiles-new": [
     {
-    "file": "gfx/RetroASCIITileset/retroasciitiles.png",
+    "file": "retroasciitiles.png",
     "transparency": { "R": 0, "G": 0, "B": 0 },
     "tiles":
     [
+        {
+            "id": "infrared_creature",
+            "fg": 2831
+        },
         {
             "id":"highlight_item",
             "fg":368,

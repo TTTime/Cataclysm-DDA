@@ -1,29 +1,24 @@
-#ifndef _PICKUP_H_
-#define _PICKUP_H_
+#ifndef PICKUP_H
+#define PICKUP_H
 
-#include <map>
-#include <string>
+#include "enums.h"
 
-class Pickup
+#include <list>
+
+class vehicle;
+class item;
+
+namespace Pickup
 {
-    public:
-        Pickup()
-        {
-            from_veh = false;
-        }
+/**
+ * Returns `false` if the player was presented a prompt and decided to cancel the pickup.
+ * `true` in other cases.
+ */
+bool do_pickup( const tripoint &pickup_target, bool from_vehicle,
+                std::list<int> &indices, std::list<int> &quantities, bool autopickup );
 
-        static void pick_up(int posx, int posy, int min); // Pick up items; ',' or via examine()
-
-    private:
-        bool from_veh;
-
-        // Pickup helper functions
-        static int handle_quiver_insertion(item &here, bool inv_on_fail, int &moves_to_decrement,
-                                           bool &picked_up);
-        void remove_from_map_or_vehicle(int posx, int posy, vehicle *veh, int cargo_part,
-                                        int &moves_taken, int curmit);
-        static void show_pickup_message(std::map<std::string, int> mapPickup);
+/** Pick up items; ',' or via examine() */
+void pick_up( const tripoint &p, int min );
 };
 
-
-#endif //_PICKUP_H_
+#endif

@@ -1,5 +1,7 @@
-#ifndef DEBUG_H_1YCYLZSS
-#define DEBUG_H_1YCYLZSS
+#ifndef DEBUG_H
+#define DEBUG_H
+
+#include "printf_check.h"
 
 /**
  *      debugmsg(msg, ...)
@@ -47,15 +49,23 @@
 #define STRING2(x) #x
 #define STRING(x) STRING2(x)
 
+#if defined(__GNUC__)
+#define __FUNCTION_NAME__ __PRETTY_FUNCTION__
+#else
+#define __FUNCTION_NAME__ __func__
+#endif
+
 /**
  * Debug message of level D_ERROR and class D_MAIN, also includes the source
  * file name and line, uses varg style arguments, teh first argument must be
  * a printf style format string.
  */
-#define debugmsg(...) realDebugmsg(__FILE__, STRING(__LINE__), __VA_ARGS__)
+
+#define debugmsg(...) realDebugmsg(__FILE__, STRING(__LINE__), __FUNCTION_NAME__, __VA_ARGS__)
 
 // Don't use this, use debugmsg instead.
-void realDebugmsg( const char *name, const char *line, const char *mes, ... );
+void realDebugmsg( const char *filename, const char *line, const char *funcname, const char *mes,
+                   ... ) PRINTF_LIKE( 4, 5 );
 
 // Enumerations                                                     {{{1
 // ---------------------------------------------------------------------
@@ -143,5 +153,12 @@ std::ostream &operator<<( std::ostream &out, const std::vector<C, A> &elm )
     return out;
 }
 
+/**
+ * Extended debugging mode, can be toggled during game.
+ * If enabled some debug message in the normal player message log are shown,
+ * and other windows might have verbose display (e.g. vehicle window).
+ */
+extern bool debug_mode;
+
 // vim:tw=72:sw=1:fdm=marker:fdl=0:
-#endif /* end of include guard: DEBUG_H_1YCYLZSS */
+#endif

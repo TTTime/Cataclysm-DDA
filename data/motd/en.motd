@@ -1,16 +1,16 @@
-# This message may be 16 lines long at maximum.
-# Max length of a line is 68 characters; the following line is for reference
-####################################################################
-Major features v0.A Kaufman:
-* Mod manager (deactivate and activate various content)
-* Fullscreen mode.
-* Many mutations, more refined mutation progression.
-* Improved view options for driving.
-* Item categories, partial stack pickup, view vehicle contents.
-* Greatly accelerated map saving and loading by chunking up saves.
-* Mouse move and mouselook.
-* Fishing and working refrigerators..
-* Backward compatability with 0.8 and 0.9 saves.
+# This message may be 21 lines long at maximum, but ideally will be less.
+# Max length of a line is 72 characters; the following line is for reference
+########################################################################
+Major features in v0.C Cooper:
+* Monster infighting.
+* Aiming system overhaul.
+* Enhanced turret controls.
+* Clothing modifications.
+* Lots of craftable pottery, explosives, metal goods, clothes and food.
+* New action menu for triggering items.
+* Improved layering and encumbrance system.
+* Huge performance improvements when dealing with many nearby items.
+* Backward compatability with 0.A and 0.B saves.
 
 For latest discussions and news on Cataclysm DDA, please visit:
 Homepage: http://www.cataclysmdda.com/

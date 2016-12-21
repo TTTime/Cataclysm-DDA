@@ -1,40 +1,37 @@
 [
 {
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "salt_water",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_OTHER",
   "skill_used": "cooking",
-  "difficulty": 0,
   "time": 1000,
-  "reversible": false,
   "autolearn": true,
+  "flags": ["BLIND_HARD"],
   "components": [
     [
       [ "water_clean", 1 ],
       [ "water", 1 ]
     ],
     [
-      [ "salt", 1 ]
+      [ "salt", 10 ]
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "saline",
   "category": "CC_OTHER",
   "subcategory": "CSC_OTHER_MEDICAL",
-  "skill_used": "cooking",
+  "skill_used": "firstaid",
   "difficulty": 2,
+  "skills_required": [ "cooking", 2 ],
   "time": 30000,
-  "reversible": false,
-  "autolearn": false,
-  "book_learn": [["textbook_firstaid", 2] , ["pocket_firstaid", 3], ["manual_first_aid", 2], ["atomic_survival", 4], ["textbook_chemistry", 5], ["adv_chemistry", 4] , ["emergency_book", 3]],
+  "book_learn": [["textbook_firstaid", 2] , ["pocket_firstaid", 2], ["manual_first_aid", 2], ["atomic_survival", 4], ["textbook_chemistry", 5], ["adv_chemistry", 4] , ["emergency_book", 3]],
   "qualities":[
-    {"id":"BOIL","level":1,"amount":1}
+    {"id":"BOIL","level":1}
   ], "tools": [
     [
       [ "hotplate", 3 ],
-      [ "char_smoker", 1 ],
       [ "toolset", 3 ],
       [ "fire", -1 ]
     ]
@@ -44,21 +41,20 @@
       [ "water_clean", 1 ]
     ],
     [
-      [ "salt", 1 ]
+      [ "salt", 10 ]
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "acid",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_CHEMICALS",
   "skill_used": "cooking",
   "difficulty": 4,
   "time": 10000,
-  "reversible": false,
   "autolearn": true,
   "qualities":[
-    {"id":"BOIL","level":2,"amount":1}
+    {"id":"BOIL","level":2}
   ], "tools": [
     [
       [ "hotplate", 3 ],
@@ -73,7 +69,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "acid",
   "id_suffix": "from batteries",
   "category": "CC_CHEM",
@@ -82,65 +78,53 @@
   "skills_required": [ "mechanics", 1 ],
   "difficulty": 2,
   "time": 5000,
-  "reversible": false,
   "autolearn": true,
   "qualities" : [
-    {"id":"SCREW","level":1,"amount":1}
+    {"id":"SCREW","level":1}
   ], "components": [
     [
       [ "battery", 125 ]
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "water_acid",
-  "id_suffix": "from electrolysis",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_CHEMICALS",
   "skill_used": "cooking",
   "skills_required": [ "electronics", 1 ],
   "difficulty": 2,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["adv_chemistry", 1] , ["textbook_chemistry", 1]],
   "tools": [
     [
       [ "chemistry_set", 5 ]
     ]
   ],
-  "components": [
-    [
-      [ "water", 1 ],
-      [ "water_clean", 1 ]
-    ]
-  ]
+  "components": [ [ [ "salt_water", 1 ] ] ]
 },{
-        "type" : "recipe",
-  "result": "lamp_oil",
+  "type" : "recipe",
+  "result": "tallow_tainted",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_OTHER",
   "skill_used": "cooking",
   "difficulty": 2,
-  "time": 30000,
-  "reversible": false,
+  "time": 15000,
   "autolearn": true,
   "qualities" : [
-    {"id":"CUT","level":1,"amount":1},
-    {"id":"COOK","level":3,"amount":1}
-  ], "tools": [
+    {"id":"CUT","level":1},
+    {"id":"COOK","level":2}
+  ],
+  "tools": [
     [
       [ "hotplate", 7 ],
-      [ "char_smoker", 1 ],
       [ "toolset", 7 ],
       [ "fire", -1 ]
     ]
   ],
   "components": [
     [
-      [ "tallow", 2 ],
-      [ "lard", 2 ],
-      [ "cooking_oil", 5 ]
+      [ "fat_tainted", 4 ]
     ],
     [
       [ "water", 1 ],
@@ -148,60 +132,58 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "handrolled_cig",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_DRUGS",
   "skill_used": "fabrication",
-  "difficulty": 0,
   "time": 2000,
-  "reversible": false,
   "autolearn": true,
+  "reversible": true,
+  "flags": ["BLIND_HARD"],
   "components": [
     [
       [ "rolling_paper", 1 ]
     ],
     [
+      [ "tobacco", 1 ],
       [ "cig_butt", 5 ],
-      [ "tobacco", 1 ]
+      [ "cigar_butt", 5 ]
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "joint",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_DRUGS",
   "skill_used": "fabrication",
-  "difficulty": 0,
   "time": 2000,
-  "reversible": false,
   "autolearn": true,
+  "reversible": true,
+  "flags": ["BLIND_HARD"],
   "components": [
     [
       [ "rolling_paper", 1 ]
     ],
     [
-      [ "joint_roach", 5 ],
-      [ "weed", 1 ]
+      [ "weed", 1 ],
+      [ "joint_roach", 5 ]
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "meth",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_DRUGS",
   "skill_used": "cooking",
   "difficulty": 5,
   "time": 20000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["textbook_chemistry", 5] , ["adv_chemistry", 5] , [ "recipe_labchem", 5]],
   "qualities":[
-    {"id":"CHEM","level":1,"amount":1}
+    {"id":"CHEM","level":1}
   ], "tools": [
     [
       [ "hotplate", 15 ],
-      [ "chemistry_set", 15 ],
       [ "toolset", 15 ],
       [ "fire", -1 ]
     ]
@@ -221,23 +203,20 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "crack",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_DRUGS",
   "skill_used": "cooking",
   "difficulty": 4,
   "time": 30000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["textbook_chemistry", 4] , ["adv_chemistry", 4] , [ "recipe_labchem", 4]],
   "qualities":[
-    {"id":"CHEM","level":1,"amount":1}
+    {"id":"CHEM","level":1}
   ], "tools": [
     [
       [ "fire", -1 ],
       [ "hotplate", 8 ],
-      [ "chemistry_set", 8 ],
       [ "toolset", 8 ]
     ]
   ],
@@ -254,7 +233,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "poppy_sleep",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_DRUGS",
@@ -262,29 +241,23 @@
   "skills_required": [ "survival", 1 ],
   "difficulty": 2,
   "time": 5000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["textbook_chemistry", 2] , ["adv_chemistry", 2] , ["pocket_survival", 3] , ["atomic_survival", 2] , ["textbook_survival", 2] , ["survival_book", 3]],
   "qualities":[
-    {"id":"CHEM","level":1,"amount":1}
+    {"id":"CHEM","level":1}
   ], "tools": [
     [
       [ "fire", -1 ],
       [ "toolset", 2 ],
-      [ "hotplate", 2 ],
-      [ "chemistry_set", 2 ]
+      [ "hotplate", 2 ]
     ]
   ],
   "components": [
     [
       [ "poppy_bud", 2 ]
-    ],
-    [
-      [ "poppy_flower", 2 ]
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "poppy_pain",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_DRUGS",
@@ -292,29 +265,23 @@
   "skills_required": [ "survival", 1 ],
   "difficulty": 2,
   "time": 5000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["textbook_chemistry", 2] , ["adv_chemistry", 2] , ["pocket_survival", 3] , ["atomic_survival", 2] , ["textbook_survival", 2] , ["survival_book", 3]],
   "qualities":[
-    {"id":"CHEM","level":1,"amount":1}
+    {"id":"CHEM","level":1}
   ], "tools": [
     [
       [ "fire", -1 ],
       [ "toolset", 2 ],
-      [ "hotplate", 2 ],
-      [ "chemistry_set", 2 ]
+      [ "hotplate", 2 ]
     ]
   ],
   "components": [
     [
       [ "poppy_bud", 2 ]
-    ],
-    [
-      [ "poppy_flower", 2 ]
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "fungicide",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_CHEMICALS",
@@ -322,17 +289,14 @@
   "skills_required": [ "survival", 1 ],
   "difficulty": 2,
   "time": 5000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["textbook_chemistry", 2] , ["adv_chemistry", 2] , ["pocket_survival", 2] , ["atomic_survival", 2] , ["textbook_survival", 1] , ["survival_book", 3] , [ "recipe_labchem", 2]],
   "qualities":[
-    {"id":"CHEM","level":1,"amount":1}
+    {"id":"CHEM","level":1}
   ], "tools": [
     [
       [ "fire", -1 ],
       [ "toolset", 2 ],
-      [ "hotplate", 2 ],
-      [ "chemistry_set", 2 ]
+      [ "hotplate", 2 ]
     ]
   ],
   "components": [
@@ -346,24 +310,21 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "antifungal",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_DRUGS",
   "skill_used": "cooking",
   "difficulty": 4,
   "time": 30000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["textbook_chemistry", 5] , ["adv_chemistry", 4] , ["pocket_survival", 5] , ["atomic_survival", 5] , ["textbook_survival", 5] , ["survival_book", 5] , [ "recipe_labchem", 4]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
       [ "fire", -1 ],
       [ "toolset", 20 ],
-      [ "hotplate", 20 ],
-      [ "chemistry_set", 20 ]
+      [ "hotplate", 20 ]
     ]
   ],
   "components": [
@@ -375,28 +336,25 @@
       [ "lye_powder", 200 ]
     ],
     [
-      [ "salt", 1 ]
+      [ "salt", 10 ]
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "antiparasitic",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_DRUGS",
   "skill_used": "cooking",
   "difficulty": 6,
   "time": 30000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["textbook_chemistry", 7] , ["adv_chemistry", 6] , ["pocket_survival", 8] , ["atomic_survival", 6] , ["textbook_survival", 6] , ["survival_book", 7] , [ "recipe_labchem", 6]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
       [ "fire", -1 ],
       [ "toolset", 20 ],
-      [ "hotplate", 20 ],
-      [ "chemistry_set", 20 ]
+      [ "hotplate", 20 ]
     ]
   ],
   "components": [
@@ -416,24 +374,21 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "adrenaline_injector",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_DRUGS",
   "skill_used": "cooking",
   "difficulty": 6,
   "time": 30000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["textbook_chemistry", 8] , ["adv_chemistry", 7] , ["pocket_survival", 8] , ["atomic_survival", 8] , ["textbook_survival", 8] , ["survival_book", 8] , [ "recipe_labchem", 7]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
       [ "fire", -1 ],
       [ "toolset", 20 ],
-      [ "hotplate", 20 ],
-      [ "chemistry_set", 20 ]
+      [ "hotplate", 20 ]
     ]
   ],
   "components": [
@@ -441,7 +396,8 @@
       [ "syringe", 1 ]
     ],
     [
-      [ "charcoal", 1 ]
+      ["charcoal", 5],
+      ["coal_lump", 5]
     ],
     [
       [ "datura_seed", 8 ]
@@ -456,22 +412,19 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "heroin",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_DRUGS",
   "skill_used": "cooking",
   "difficulty": 6,
   "time": 2000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["textbook_chemistry", 7] , ["adv_chemistry", 7] , ["atomic_survival", 6] , [ "recipe_labchem", 6]],
   "qualities":[
-    {"id":"CHEM","level":1,"amount":1}
+    {"id":"CHEM","level":1}
   ], "tools": [
     [
       [ "hotplate", 3 ],
-      [ "chemistry_set", 3 ],
       [ "toolset", 3 ],
       [ "fire", -1 ]
     ]
@@ -479,7 +432,7 @@
   "components": [
     [
       [ "salt_water", 1 ],
-      [ "salt", 1 ],
+      [ "salt", 10 ],
       [ "saline", 5 ]
     ],
     [
@@ -487,22 +440,19 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "diazepam",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_DRUGS",
   "skill_used": "cooking",
   "difficulty": 6,
   "time": 4000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["textbook_chemistry", 7] , ["adv_chemistry", 7] , ["atomic_survival", 6] , [ "recipe_labchem", 6]],
   "qualities":[
-    {"id":"CHEM","level":1,"amount":1}
+    {"id":"CHEM","level":1}
   ], "tools": [
     [
       [ "hotplate", 3 ],
-      [ "chemistry_set", 3 ],
       [ "toolset", 3 ],
       [ "fire", -1 ]
     ]
@@ -510,7 +460,7 @@
   "components": [
     [
       [ "salt_water", 1 ],
-      [ "salt", 1 ],
+      [ "salt", 10 ],
       [ "saline", 5 ]
     ],
     [
@@ -521,22 +471,19 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "thorazine",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_DRUGS",
   "skill_used": "cooking",
   "difficulty": 7,
   "time": 4000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["textbook_chemistry", 8] , ["adv_chemistry", 8] , ["atomic_survival", 7] , [ "recipe_labchem", 7]],
   "qualities":[
-    {"id":"CHEM","level":1,"amount":1}
+    {"id":"CHEM","level":1}
   ], "tools": [
     [
       [ "hotplate", 3 ],
-      [ "chemistry_set", 3 ],
       [ "toolset", 3 ],
       [ "fire", -1 ]
     ]
@@ -544,7 +491,7 @@
   "components": [
     [
       [ "salt_water", 1 ],
-      [ "salt", 1 ],
+      [ "salt", 10 ],
       [ "saline", 5 ]
     ],
     [
@@ -555,24 +502,21 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "lsd",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_DRUGS",
   "skill_used": "cooking",
   "difficulty": 6,
   "time": 30000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["textbook_chemistry", 8] , ["adv_chemistry", 6]  , [ "recipe_labchem", 7]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
       [ "fire", -1 ],
       [ "toolset", 20 ],
-      [ "hotplate", 20 ],
-      [ "chemistry_set", 20 ]
+      [ "hotplate", 20 ]
     ]
   ],
   "components": [
@@ -595,7 +539,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "mutagen",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -603,14 +547,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 8,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["textbook_gaswarfare",  8] , ["recipe_creepy", 8] , ["recipe_animal", 8] , ["recipe_maiar", 7] , ["recipe_serum", 7] , [ "recipe_labchem", 7]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -618,8 +559,9 @@
   ],
   "components": [
     [
+      [ "tallow_tainted", 2 ],
       [ "meat_tainted", 3 ],
-      [ "veggy_tainted", 5 ],
+      [ "dry_meat_tainted", 3 ],
       [ "slime_scrap", 5 ],
       [ "fetus", 1 ],
       [ "arm", 2 ],
@@ -635,7 +577,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -643,14 +585,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 9,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 8 ] , [ "recipe_labchem", 9]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -662,7 +601,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "mutagen_plant",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -670,14 +609,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_creepy", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -688,7 +624,7 @@
       [ "mutagen", 1 ]
     ],
     [
-      [ "veggy_tainted", 3 ],
+      [ "veggy", 3 ],
       [ "biollante_bud", 1 ],
       [ "datura_seed", 16 ]
     ],
@@ -698,7 +634,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen_plant",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -706,14 +642,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 10,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 8 ] , [ "recipe_creepy", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -725,7 +658,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "mutagen_insect",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -733,14 +666,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_maiar", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -762,7 +692,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen_insect",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -770,14 +700,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 10,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 8 ] , [ "recipe_maiar", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -789,7 +716,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "mutagen_spider",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -797,14 +724,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_maiar", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -824,7 +748,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen_spider",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -832,14 +756,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 10,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 8 ] , [ "recipe_maiar", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -851,7 +772,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "mutagen_slime",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -859,14 +780,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_maiar", 8 ] , [ "recipe_creepy", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -886,7 +804,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen_slime",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -894,14 +812,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 9,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 8 ] , [ "recipe_maiar", 8 ] , [ "recipe_creepy", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -913,7 +828,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "mutagen_fish",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -921,14 +836,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_animal", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -951,7 +863,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen_fish",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -959,14 +871,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 9,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 8 ] , [ "recipe_animal", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -978,7 +887,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "mutagen_rat",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -986,14 +895,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_creepy", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -1004,7 +910,8 @@
       [ "mutagen", 1 ]
     ],
     [
-      [ "meat_tainted", 3 ]
+      [ "meat_tainted", 3 ],
+      [ "dry_meat_tainted", 3 ]
     ],
     [
       [ "ammonia", 1 ],
@@ -1012,7 +919,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen_rat",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1020,14 +927,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 9,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 8 ] , [ "recipe_creepy", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1039,7 +943,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "mutagen_beast",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1047,14 +951,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_animal", 7 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -1081,14 +982,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 9,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 8 ] , [ "recipe_animal", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1108,14 +1006,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_animal", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -1142,14 +1037,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 9,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 8 ] , [ "recipe_animal", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1169,14 +1061,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_animal", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -1203,14 +1092,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 9,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 8 ] , [ "recipe_animal", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1230,14 +1116,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_animal", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -1264,14 +1147,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 9,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 8 ] , [ "recipe_animal", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1283,7 +1163,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "mutagen_cattle",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1291,14 +1171,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_animal", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -1317,7 +1194,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen_cattle",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1325,14 +1202,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 9,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 8 ] ,  [ "recipe_animal", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1344,7 +1218,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "mutagen_cephalopod",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1352,14 +1226,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_creepy", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -1371,7 +1242,9 @@
     ],
     [
       [ "meat_tainted", 3 ],
-      [ "can_chowder", 1 ]
+      [ "dry_meat_tainted", 3 ],
+      [ "can_chowder", 1 ],
+      [ "can_clams", 1 ]
     ],
     [
       [ "ammonia", 1 ],
@@ -1379,7 +1252,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen_cephalopod",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1387,14 +1260,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 9,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 8 ] , [ "recipe_creepy", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1406,7 +1276,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "mutagen_bird",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1414,14 +1284,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_animal", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -1440,7 +1307,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen_bird",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1448,14 +1315,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 9,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 8 ] , [ "recipe_animal", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1467,7 +1331,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "mutagen_lizard",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1475,14 +1339,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_animal", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -1501,7 +1362,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen_lizard",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1509,14 +1370,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 9,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 8 ] , [ "recipe_animal", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1528,7 +1386,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "mutagen_troglobite",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1536,14 +1394,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_maiar", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -1562,7 +1417,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen_troglobite",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1570,14 +1425,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 9,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 8 ] , [ "recipe_maiar", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1589,22 +1441,19 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "mutagen_medical",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
   "skill_used": "cooking",
-  "requires_skills": [ "firstaid", 1 ],
+  "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
   "book_learn": [[ "recipe_medicalmut", 9 ]],
-  "autolearn": false,
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -1635,11 +1484,12 @@
       [ "vitamins", 5 ],
       [ "iodine", 5 ],
       [ "disinfectant", 5 ],
+      [ "hflesh_powder", 10 ],
       [ "protein_powder", 10 ]
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen_medical",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1647,14 +1497,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 10,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_medicalmut", 9 ] , [ "recipe_serum", 9 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1666,18 +1513,17 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "canister_goo",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_CHEMICALS",
   "skill_used": "fabrication",
   "difficulty": 2,
   "time": 5000,
-  "reversible": false,
   "autolearn": true,
   "note": "'stick the blob globs in a can and seal it' does not seem hugely challenging",
   "qualities" : [
-    {"id":"SCREW","level":1,"amount":1}
+    {"id":"SCREW","level":1}
   ], "components": [
     [
       [ "canister_empty", 1 ]
@@ -1687,7 +1533,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "purifier",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1695,14 +1541,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 9,
   "time": 10000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["textbook_gaswarfare", 9] , ["atomic_survival", 9] , ["record_patient", 9] , ["recipe_maiar", 8] , [ "recipe_labchem", 7]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -1723,7 +1566,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_purifier",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1731,14 +1574,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 10,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_serum", 9] , [ "recipe_labchem", 9]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1755,17 +1595,14 @@
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
   "skill_used": "cooking",
-  "requires_skills": [ "firstaid", 1 ],
+  "skills_required": [ "firstaid", 1 ],
   "difficulty": 10,
   "time": 20000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_alpha", 9 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 50 ],
       [ "hotplate", 50 ],
       [ "toolset", 50 ],
       [ "fire", -1 ]
@@ -1773,20 +1610,24 @@
   ],
   "components": [
     [
-      [ "mutagen_slime", 2 ]
+      [ "mutagen_slime", 2 ],
+      [ "iv_mutagen_slime", 1 ]
     ],
     [
-      [ "mutagen_plant", 2 ]
+      [ "mutagen_plant", 2 ],
+      [ "iv_mutagen_plant", 1 ]
     ],
     [
-      [ "mutagen_bird", 2 ]
+      [ "mutagen_bird", 2 ],
+      [ "iv_mutagen_bird", 1 ]
     ],
     [
-      [ "purifier", 4 ]
+      [ "purifier", 4 ],
+      [ "iv_purifier", 2 ]
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen_alpha",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1794,14 +1635,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 10,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_alpha", 9 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1818,17 +1656,14 @@
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
   "skill_used": "cooking",
-  "requires_skills": [ "firstaid", 1 ],
+  "skills_required": [ "firstaid", 1 ],
   "difficulty": 10,
   "time": 12500,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_elfa", 10 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 31 ],
       [ "hotplate", 31 ],
       [ "toolset", 31 ],
       [ "fire", -1 ]
@@ -1836,7 +1671,8 @@
   ],
   "components": [
     [
-      [ "mutagen_slime", 2 ]
+      [ "mutagen_slime", 2 ],
+      [ "iv_mutagen_slime", 1 ]
     ],
     [
       [ "mutagen_plant", 1 ]
@@ -1846,7 +1682,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen_elfa",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1854,14 +1690,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 10,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_elfa", 10 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1878,17 +1711,14 @@
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
   "skill_used": "cooking",
-  "requires_skills": [ "firstaid", 1 ],
+  "skills_required": [ "firstaid", 1 ],
   "difficulty": 10,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_chimera", 9]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1909,7 +1739,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen_chimera",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1917,14 +1747,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 10,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_chimera", 8 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1941,17 +1768,14 @@
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
   "skill_used": "cooking",
-  "requires_skills": [ "firstaid", 1 ],
+  "skills_required": [ "firstaid", 1 ],
   "difficulty": 10,
   "time": 12500,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_raptor", 9 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 31 ],
       [ "hotplate", 31 ],
       [ "toolset", 31 ],
       [ "fire", -1 ]
@@ -1969,7 +1793,7 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "iv_mutagen_raptor",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_MUTAGEN",
@@ -1977,14 +1801,11 @@
   "skills_required": [ "firstaid", 3 ],
   "difficulty": 10,
   "time": 15000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [[ "recipe_raptor", 9 ]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 37 ],
       [ "hotplate", 37 ],
       [ "toolset", 37 ],
       [ "fire", -1 ]
@@ -1997,48 +1818,6 @@
   ]
 },{
   "type" : "recipe",
-  "result": "disinfectant",
-  "category": "CC_OTHER",
-  "subcategory": "CSC_OTHER_MEDICAL",
-  "skill_used": "cooking",
-  "skills_required": [ "firstaid", 2 ],
-  "difficulty": 4,
-  "time": 24000,
-  "reversible": false,
-  "autolearn": false,
-  "book_learn": [["textbook_firstaid", 3] , ["manual_first_aid", 3] , ["emergency_book", 4] , ["pocket_firstaid", 2] , ["recipe_labchem", 4]],
-  "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
-  ], "tools": [
-    [
-      [ "chemistry_set", 25 ],
-      [ "hotplate", 25 ],
-      [ "toolset", 25 ],
-      [ "fire", -1 ]
-    ]
-  ],
-  "components": [
-    [
-      [ "whiskey", 7 ],
-      [ "single_malt_whiskey", 7 ],
-      [ "vodka", 7 ],
-      [ "rum", 7 ],
-      [ "tequila", 7 ],
-      [ "gin", 7 ],
-      [ "triple_sec", 7 ],
-      [ "moonshine", 7 ],
-      [ "brandy", 7 ],
-      [ "bleach", 1 ]
-    ],
-    [
-      [ "water_clean", 1 ]
-    ],
-    [
-      [ "oxy_powder", 10 ]
-    ]
-  ]
-},{
-        "type" : "recipe",
   "result": "iodine",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_CHEMICALS",
@@ -2046,14 +1825,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 6,
   "time": 24000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["adv_chemistry", 5] , ["textbook_chemistry", 5] , ["recipe_labchem", 5] , ["atomic_survival", 5]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -2062,14 +1838,52 @@
   "components": [
     [
       [ "disinfectant", 2 ],
-      [ "salt", 5 ]
+      [ "salt", 50 ]
     ],
     [
       [ "aspirin", 10 ]
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
+  "result": "prussian_blue",
+  "category": "CC_CHEM",
+  "subcategory": "CSC_CHEM_CHEMICALS",
+  "skill_used": "cooking",
+  "skills_required": [ "firstaid", 1 ],
+  "difficulty": 7,
+  "time": 36000,
+  "book_learn": [["adv_chemistry", 6] , ["textbook_chemistry", 7] , ["recipe_labchem", 6] , ["atomic_survival", 5]],
+  "qualities":[
+    {"id":"CHEM","level":2},
+    {"id":"CONTAIN","level":1}
+  ], "tools": [
+    [
+      [ "hotplate", 25 ],
+      [ "toolset", 25 ],
+      [ "fire", -1 ]
+    ]
+  ],
+  "components": [
+    [
+      [ "material_quicklime", 1 ]
+    ],
+    [
+      [ "scrap", 1 ]
+    ],
+    [
+      [ "ammonia", 1 ]
+    ],
+    [
+      ["charcoal", 5],
+      ["coal_lump", 5]
+    ],
+    [
+      [ "lye_powder", 5 ]
+    ]
+  ]
+},{
+  "type" : "recipe",
   "result": "aspirin",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_DRUGS",
@@ -2077,14 +1891,11 @@
   "skills_required": [ "firstaid", 1 ],
   "difficulty": 4,
   "time": 24000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["adv_chemistry", 2] , ["textbook_chemistry", 2] , ["recipe_labchem", 2] , ["atomic_survival", 3]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -2098,27 +1909,22 @@
       [ "oxy_powder", 5 ]
     ],
     [
-      [ "2x4", 2 ],
-      [ "stick", 2 ],
-      [ "splinter", 4 ]
+      [ "willowbark", 10 ]
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "pur_tablets",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_OTHER",
   "skill_used": "cooking",
   "difficulty": 6,
   "time": 24000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["adv_chemistry", 5] , ["textbook_chemistry", 5] , ["recipe_labchem", 4] , ["atomic_survival", 4] , ["textbook_survival", 4]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
       [ "toolset", 25 ],
       [ "fire", -1 ]
@@ -2137,15 +1943,13 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "bleach",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_CHEMICALS",
   "skill_used": "cooking",
   "difficulty": 6,
   "time": 24000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["adv_chemistry", 5] , ["textbook_chemistry", 5] , ["recipe_labchem", 5]],
   "tools": [
     [
@@ -2159,15 +1963,13 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "ammonia",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_CHEMICALS",
   "skill_used": "cooking",
   "difficulty": 6,
   "time": 36000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["adv_chemistry", 5] , ["textbook_chemistry", 5] , ["recipe_labchem", 5]],
   "tools": [
     [
@@ -2183,28 +1985,27 @@
       [ "scrap", 1 ]
     ],
     [
-      [ "charcoal", 1 ],
+      [ "charcoal", 5 ],
+      [ "coal_lump", 5 ],
       [ "lye_powder", 20 ]
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "oxy_powder",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_CHEMICALS",
   "skill_used": "cooking",
   "difficulty": 8,
   "time": 12000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["adv_chemistry", 5] , ["textbook_chemistry", 5] , ["recipe_labchem", 5]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
-      [ "toolset", 25 ]
+      [ "toolset", 25 ],
+      [ "fire", -1 ]
     ]
   ],
   "components": [
@@ -2217,28 +2018,27 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "lye_powder",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_CHEMICALS",
   "skill_used": "cooking",
   "difficulty": 4,
-  "time": 36000,
-  "reversible": false,
-  "autolearn": false,
+  "time": 180000,
+  "batch_time_factors":[80, 4],
   "book_learn": [["adv_chemistry", 5] , ["textbook_chemistry", 5] , ["recipe_labchem", 5]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":1}
   ], "tools": [
     [
-      [ "chemistry_set", 25 ],
       [ "hotplate", 25 ],
-      [ "toolset", 25 ]
+      [ "toolset", 25 ],
+      [ "fire", -1 ]
     ]
   ],
   "components": [
     [
-      [ "charcoal", 10 ]
+      [ "charcoal", 50 ]
     ],
     [
       [ "water_clean", 2 ],
@@ -2246,35 +2046,31 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "heatpack",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_OTHER",
   "skill_used": "cooking",
   "difficulty": 3,
   "time": 6000,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["adv_chemistry", 3] , ["textbook_chemistry", 3] , ["atomic_survival", 4]],
   "qualities":[
-    {"id":"CHEM","level":2,"amount":1}
+    {"id":"CHEM","level":2}
   ], "tools": [
     [
-      [ "chemistry_set", 2 ],
       [ "hotplate", 2 ],
       [ "toolset", 2 ],
       [ "fire", -1 ]
     ],
     [
-      [ "needle_bone", 1 ],
-      [ "needle_wood", 1 ],
       [ "sewing_kit", 1 ]
     ]
   ],
   "components": [
     [
       [ "rag", 1 ],
-      [ "bag_plastic", 1 ]
+      [ "bag_plastic", 1 ],
+      [ "heatpack_used", 1 ]
     ],
     [
       [ "oxy_powder", 5 ]
@@ -2284,21 +2080,19 @@
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "superglue",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_OTHER",
   "skill_used": "cooking",
   "difficulty": 2,
   "time": 12000,
-  "reversible": false,
   "autolearn": true,
   "qualities":[
-    {"id":"COOK","level":3,"amount":1}
+    {"id":"CHEM","level":1}
   ], "tools": [
     [
       [ "hotplate", 5 ],
-      [ "char_smoker", 1 ],
       [ "toolset", 5 ],
       [ "fire", -1 ]
     ]
@@ -2312,13 +2106,18 @@
       [ "bleach", 1 ],
       [ "lye_powder", 100 ],
       [ "bone", 20 ],
+      [ "bone_human", 20 ],
+      [ "bone_tainted", 40 ],
+      [ "cured_hide", 2 ],
+      [ "pine_bough", 10 ],
+      [ "raw_dandelion", 20 ],
       [ "biollante_bud", 1],
       [ "ant_egg", 1 ],
       [ "slime_scrap", 1 ]
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "pheromone",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_CHEMICALS",
@@ -2326,12 +2125,9 @@
   "skills_required": [ "survival", 1 ],
   "difficulty": 3,
   "time": 1200,
-  "reversible": false,
-  "autolearn": false,
   "book_learn": [["adv_chemistry", 6] , ["textbook_chemistry", 6] , ["recipe_labchem", 3]],
   "tools": [
     [
-      [ "chemistry_set", 18 ],
       [ "hotplate", 18 ],
       [ "toolset", 18 ],
       [ "fire", -1 ]
@@ -2339,14 +2135,15 @@
   ],
   "components": [
     [
-      [ "meat_tainted", 1 ]
+      [ "meat_tainted", 1 ],
+      [ "dry_meat_tainted", 1 ]
     ],
     [
       [ "ammonia", 1 ]
     ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "fertilizer_liquid",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_CHEMICALS",
@@ -2354,35 +2151,33 @@
   "skills_required": ["survival", 2],
   "difficulty": 3,
   "time": 20000,
-  "reversible": false,
   "autolearn": true,
   "book_learn": [["adv_chemistry", 2] , ["textbook_chemistry", 2] , ["recipe_labchem", 3] , ["atomic_survival", 2]],
   "qualities":[
-    {"id":"COOK","level":3,"amount":1}
+    {"id":"CHEM","level":1}
   ], "tools": [
-    [ [ "hotplate", 5 ], [ "chemistry_set", 5 ], [ "char_smoker", 1 ], [ "toolset", 5 ], [ "fire", -1 ] ]
+    [ [ "hotplate", 5 ], [ "toolset", 5 ], [ "fire", -1 ] ]
   ],
   "components": [
     [ [ "water", 4 ], [ "water_clean", 4 ] ],
     [ [ "meal_bone", 2 ] ],
     [ [ "meal_chitin_piece", 1 ] ],
-    [ [ "ammonia", 1 ], [ "lye_powder", 100 ] ]
+    [ [ "ammonia", 1 ], [ "lye_powder", 100 ], [ "chem_saltpetre", 50 ] ]
   ]
 },{
-        "type" : "recipe",
+  "type" : "recipe",
   "result": "flask_yeast",
   "category": "CC_CHEM",
   "subcategory": "CSC_CHEM_OTHER",
   "skill_used": "cooking",
   "difficulty": 2,
   "time": 30000,
-  "reversible": false,
   "autolearn": true,
   "tools": [
     [
       [ "hotplate", 7 ],
-      [ "chemistry_set", 7 ],
-      [ "toolset", 7 ]
+      [ "toolset", 7 ],
+      [ "fire", -1 ]
     ]
   ],
   "components": [
@@ -2397,9 +2192,568 @@
       [ "yeast", 1 ]
     ],
     [
-      [ "sugar", 1 ],
+      [ "sugar", 10 ],
       [ "honey_bottled", 1 ]
     ]
+  ]
+}, {
+  "type" : "recipe",
+  "result": "fertilizer_bomb",
+  "category": "CC_CHEM",
+  "subcategory": "CSC_CHEM_CHEMICALS",
+  "skill_used": "cooking",
+  "skills_required": ["survival", 2],
+  "difficulty": 3,
+  "time": 20000,
+  "autolearn": true,
+  "book_learn": [["adv_chemistry", 2] , ["textbook_chemistry", 2] , ["recipe_labchem", 3] , ["atomic_survival", 2]],
+  "qualities":[ {"id" : "CHEM", "level" : 1, "amount" : 1} ],
+  "components": [
+    [ [ "jug_plastic", 1 ], [ "jar_3l_glass", 1 ] ],
+    [ [ "fertilizer_liquid", 4 ], [ "fertilizer_commercial", 4 ] ],
+    [ [ "gasoline", 400 ], [ "diesel", 400 ], [ "sugar", 100 ] ],
+    [ [ "string_6", 1 ], [ "rag", 1] ]
+  ]
+},{
+  "type" : "recipe",
+  "result": "slime_scrap",
+  "category": "CC_CHEM",
+  "subcategory": "CSC_CHEM_CHEMICALS",
+  "skill_used": "cooking",
+  "difficulty": 6,
+  "time": 45000,
+  "book_learn": [[ "recipe_creepy", 7 ], [ "recipe_serum", 7 ]],
+  "qualities":[
+    {"id":"CUT","level":1},
+    {"id":"CHEM","level":2}],
+  "tools": [
+      [
+        [ "hotplate", 20 ],
+        [ "toolset", 20 ],
+        [ "fire", -1 ]
+      ]
+    ],
+  "components": [
+      [
+        [ "meat_tainted", 1 ],
+        [ "dry_meat_tainted", 1 ]
+      ]
+    ]
+},{
+  "type" : "recipe",
+  "result": "soap",
+  "category": "CC_CHEM",
+  "subcategory": "CSC_CHEM_CHEMICALS",
+  "skill_used": "cooking",
+  "difficulty": 3,
+  "time": 45000,
+  "qualities" : [
+    {"id":"CHEM","level":1}],
+  "autolearn": true,
+  "tools": [
+    [
+     [ "hotplate", 18 ],
+     [ "toolset", 18 ],
+     [ "fire", -1 ]
+    ]
+    ],
+  "components": [
+    [
+     [ "tallow", 2 ],
+     [ "lard", 2 ],
+     [ "cooking_oil", 2 ]
+    ],
+    [
+     [ "lye_powder", 10 ]
+    ],
+    [
+     [ "water", 1 ],
+     [ "water_clean", 1 ]
+    ]
+   ]
+},{
+  "type" : "recipe",
+  "result": "poppysyrup",
+  "category": "CC_CHEM",
+  "subcategory": "CSC_CHEM_DRUGS",
+  "skill_used": "cooking",
+  "skills_required": [ "survival", 1 ],
+  "difficulty": 2,
+  "time": 5000,
+  "book_learn": [["textbook_chemistry", 2] , ["adv_chemistry", 2] , ["pocket_survival", 3] , ["atomic_survival", 2] , ["textbook_survival", 2] , ["survival_book", 3]],
+  "qualities":[
+    {"id":"CHEM","level":1}
+  ], "tools": [
+    [
+      [ "fire", -1 ],
+      [ "toolset", 2 ],
+      [ "hotplate", 2 ]
+    ]
+  ],
+  "components": [
+    [
+      [ "poppy_bud", 2 ]
+    ]
+  ]
+},
+{
+  "type" : "recipe",
+  "result": "chem_hydrogen_peroxide_conc",
+  "category": "CC_CHEM",
+  "subcategory": "CSC_CHEM_CHEMICALS",
+  "skill_used": "cooking",
+  "difficulty": 7,
+  "time": 25000,
+  "book_learn": [[ "recipe_labchem", 7 ], ["textbook_chemistry", 7]],
+  "qualities":[ {"id":"BOIL","level":2} ],
+    "tools": [
+    [
+      [ "fire", -1 ],
+      [ "toolset", 25 ],
+      [ "hotplate", 25 ]
+    ]
+    ],
+  "components": [ [ [ "chem_hydrogen_peroxide", 5 ] ] ]
+},
+{
+    "type" : "recipe",
+    "result": "chem_hydrogen_peroxide",
+    "result_mult": 5,
+    "category": "CC_CHEM",
+    "subcategory": "CSC_CHEM_DRUGS",
+    "skill_used": "cooking",
+    "skills_required": [["firstaid", 3]],
+    "difficulty": 4,
+    "time": 6000,
+    "autolearn": true,
+    "book_learn": [["recipe_labchem", 3 ], ["textbook_chemistry", 3]],
+    "qualities": [{"id":"BOIL","level":2}, {"id":"CHEM","level":1}],
+    "tools": [[[ "hotplate", 10 ], [ "toolset", 10 ], [ "fire", -1 ]]],
+    "components": [
+      [[ "chem_hydrogen_peroxide_conc", 1 ]],
+      [[ "water", 5 ], ["water_clean", 5]]
+    ]
+},
+{
+  "type" : "recipe",
+  "result": "chem_sulphuric_acid",
+  "category": "CC_CHEM",
+  "subcategory": "CSC_CHEM_CHEMICALS",
+  "skill_used": "cooking",
+  "difficulty": 7,
+  "time": 15000,
+  "autolearn": true,
+  "qualities":[{"id":"BOIL","level":2}],
+  "tools": [
+    [[ "chemistry_set", 25 ]],
+    [
+      [ "hotplate", 10 ],
+      [ "toolset", 10 ],
+      [ "fire", -1 ]
+    ]
+  ],
+  "components": [
+    [ [ "chem_hydrogen_peroxide_conc", 1 ] ],
+    [ [ "chem_sulphur", 25 ] ] ]
+},
+{
+"type" : "recipe",
+"result": "chem_nitric_acid",
+"category": "CC_CHEM",
+"subcategory": "CSC_CHEM_CHEMICALS",
+"skill_used": "cooking",
+"difficulty": 5,
+"time": 10000,
+"autolearn": true,
+"qualities":[
+{"id":"BOIL","level":2},
+{"id":"CHEM","level":2}
+], "tools": [
+[
+[ "fire", -1 ],
+[ "toolset", 50 ],
+[ "hotplate", 50 ]
+]
+],
+"components": [
+[
+[ "chem_sulphuric_acid", 1 ]
+],
+[
+[ "chem_saltpetre", 25 ]
+]
+]
+},
+{
+"type" : "recipe",
+"result": "chem_aluminium_sulphate",
+"category": "CC_CHEM",
+"subcategory": "CSC_CHEM_CHEMICALS",
+"skill_used": "cooking",
+"difficulty": 5,
+"time": 2500,
+"autolearn": true,
+"qualities":[
+{"id":"BOIL","level":2},
+{"id":"CHEM","level":2}
+], "tools": [
+[
+[ "fire", -1 ],
+[ "toolset", 25 ],
+[ "hotplate", 25 ]
+]
+],
+"components": [
+[
+[ "chem_sulphuric_acid", 1 ]
+],
+[
+[ "chem_hydrogen_peroxide", 1 ]
+],
+[
+[ "chem_aluminium_powder", 25 ]
+]
+]
+},
+{
+"type" : "recipe",
+"result": "chem_ammonium_nitrate",
+"byproducts": [ [ "water" ] ],
+"category": "CC_CHEM",
+"subcategory": "CSC_CHEM_CHEMICALS",
+"skill_used": "cooking",
+"difficulty": 4,
+"time": 3000,
+"autolearn": true,
+"qualities":[
+{"id":"BOIL","level":2},
+{"id":"CHEM","level":2}
+], "tools": [
+[
+[ "fire", -1 ],
+[ "toolset", 25 ],
+[ "hotplate", 25 ]
+]
+],
+"components": [
+[
+[ "chem_nitric_acid", 5 ]
+],
+[
+[ "ammonia", 5 ]
+]
+]
+},
+{
+  "type" : "recipe",
+  "result": "chem_saltpetre",
+  "byproducts": [ [ "ammonia", 1 ] ],
+  "category": "CC_CHEM",
+  "subcategory": "CSC_CHEM_CHEMICALS",
+  "skill_used": "cooking",
+  "difficulty": 5,
+  "time": 25000,
+  "book_learn": [[ "textbook_anarch", 7 ] , [ "recipe_labchem", 5 ], ["textbook_chemistry", 6]],
+  "qualities" : [
+      { "id":"BOIL","level":2 },
+      { "id":"CHEM","level":2 }
+  ],
+  "tools": [
+    [
+      [ "fire", -1 ],
+      [ "toolset", 25 ],
+      [ "hotplate", 25 ]
+    ]
+  ],
+  "components": [
+    [ [ "chem_ammonium_nitrate", 25 ] ],
+    [ [ "lye_powder", 150 ] ]
+  ]
+},{
+  "type" : "recipe",
+  "result": "chem_saltpetre",
+  "id_suffix": "niter",
+  "result_mult": 5,
+  "category": "CC_CHEM",
+  "subcategory": "CSC_CHEM_CHEMICALS",
+  "skill_used": "cooking",
+  "difficulty": 4,
+  "time": 40000,
+  "batch_time_factors":[80, 4],
+  "autolearn": true,
+  "qualities" : [
+      { "id":"BOIL","level":2 },
+      { "id":"CONTAIN","level":1 }
+  ],
+  "tools": [
+    [
+      [ "fire", -1 ],
+      [ "toolset", 25 ],
+      [ "hotplate", 25 ]
+    ]
+  ],
+  "components": [
+    [ [ "material_niter", 1 ] ],
+    [
+      [ "water_clean", 3 ],
+      [ "water", 3 ]
+    ]
+  ]
+},{
+  "type" : "recipe",
+  "result": "chem_black_powder",
+  "category": "CC_CHEM",
+  "subcategory": "CSC_CHEM_CHEMICALS",
+  "skill_used": "cooking",
+  "difficulty": 4,
+  "time": 20000,
+  "book_learn": [[ "textbook_anarch", 6 ] , [ "recipe_labchem", 4 ], ["textbook_chemistry", 5], ["textbook_armschina", 5]],
+  "qualities" :
+    [
+      {"id":"CONTAIN","level":1}
+    ],
+  "components": [
+    [
+      [ "chem_saltpetre", 150 ]
+    ],
+    [
+      [ "chem_sulphur", 20 ]
+    ] ,
+    [
+      [ "charcoal", 10 ],
+      [ "coal_lump", 10 ]
+    ]
+  ]
+},{
+  "type" : "recipe",
+  "result": "chem_black_powder",
+  "id_suffix": "generic",
+  "category": "CC_AMMO",
+  "subcategory": "CSC_AMMO_COMPONENTS",
+  "skill_used": "fabrication",
+  "skills_required": [ "cooking", 1 ],
+  "difficulty": 4,
+  "time": 20000,
+  "book_learn": [[ "textbook_anarch", 4 ] , ["recipe_bullets" , 2 ] , [ "manual_shotgun", 3 ] , [ "manual_pistol", 3 ], [ "adv_chemistry", 3 ] , [ "textbook_chemistry", 3 ]],
+  "qualities":[
+    {"id":"CHEM","level":2}
+  ], "tools": [
+    [
+      [ "hotplate", 50 ],
+      [ "toolset", 50 ]
+    ]
+  ],
+  "components": [
+    [
+      [ "oxy_powder", 200 ]
+    ],
+    [
+      [ "ammonia", 2 ],
+      [ "lye_powder", 200 ]
+    ],
+    [
+      [ "charcoal", 25 ]
+    ]
+  ]
+},
+{
+"type" : "recipe",
+"result": "chem_anfo",
+"category": "CC_CHEM",
+"subcategory": "CSC_CHEM_CHEMICALS",
+"skill_used": "cooking",
+"difficulty": 5,
+"time": 180000,
+"book_learn": [[ "textbook_anarch", 6 ] , [ "recipe_labchem", 5 ] , ["textbook_chemistry", 7]],
+"qualities" :
+[
+{"id":"CONTAIN","level":1}
+],
+"components": [
+[
+[ "chem_ammonium_nitrate", 90 ]
+],
+[
+[ "diesel", 500 ],
+[ "gasoline", 500 ]
+]
+]
+},
+{
+"type" : "recipe",
+"result": "chem_acetic_acid",
+"category": "CC_CHEM",
+"subcategory": "CSC_CHEM_CHEMICALS",
+"skill_used": "cooking",
+"difficulty": 4,
+"time": 4000,
+"autolearn": true,
+"qualities":[
+{"id":"BOIL","level":2}
+], "tools": [
+[
+[ "fire", -1 ],
+[ "toolset", 10 ],
+[ "hotplate", 10 ]
+]
+],
+"components": [
+[
+[ "vinegar", 10 ]
+]
+]
+},
+{
+"type" : "recipe",
+"result": "chem_rdx",
+"category": "CC_CHEM",
+"subcategory": "CSC_CHEM_CHEMICALS",
+"skill_used": "cooking",
+"difficulty": 7,
+"time": 75000,
+"book_learn": [[ "recipe_labchem", 8 ], ["textbook_anarch", 10]],
+"qualities":[
+{"id":"BOIL","level":2},
+{"id":"CHEM","level":2}
+], "tools": [
+[
+[ "fire", -1 ],
+[ "toolset", 20 ],
+[ "hotplate", 20 ]
+]
+],
+"components": [
+[
+[ "chem_hexamine", 50 ]
+],
+[
+[ "chem_nitric_acid", 5 ]
+],
+[
+[ "chem_sulphuric_acid", 2 ]
+]
+]
+},
+{
+"type" : "recipe",
+"result": "chem_thermite",
+"category": "CC_CHEM",
+"subcategory": "CSC_CHEM_CHEMICALS",
+"skill_used": "cooking",
+"difficulty": 4,
+"time": 2000,
+"autolearn": true,
+"qualities":[
+{"id":"BOIL","level":2}
+],
+"components": [
+[
+[ "chem_aluminium_powder", 50 ]
+],
+[
+[ "chem_chromium_oxide", 50 ]
+]
+]
+},
+{
+"type" : "recipe",
+"result": "chem_hmtd",
+"category": "CC_CHEM",
+"subcategory": "CSC_CHEM_CHEMICALS",
+"skill_used": "cooking",
+"difficulty": 7,
+"time": 55000,
+"book_learn": [[ "recipe_labchem", 8 ]],
+"qualities":[
+{"id":"BOIL","level":2}
+],
+"components": [
+[
+[ "chem_hexamine", 25 ]
+],
+[
+[ "chem_hydrogen_peroxide_conc", 5 ]
+],
+[
+[ "chem_acetic_acid", 2 ]
+]
+]
+},
+{
+"type" : "recipe",
+"result": "chem_rocket_fuel",
+"category": "CC_CHEM",
+"subcategory": "CSC_CHEM_CHEMICALS",
+"skill_used": "cooking",
+"difficulty": 4,
+"time": 5000,
+"book_learn": [[ "textbook_anarch", 5 ] , [ "recipe_labchem", 4 ], ["textbook_chemistry", 5]],
+"qualities":[
+{"id":"BOIL","level":2}
+],
+"components": [
+[
+[ "chem_zinc_powder", 50 ]
+],
+[
+[ "chem_sulphur", 50 ]
+],
+[
+[ "superglue", 2 ]
+]
+]
+},
+{
+"type" : "recipe",
+"result": "tool_rocket_candy",
+"category": "CC_CHEM",
+"subcategory": "CSC_CHEM_CHEMICALS",
+"skill_used": "cooking",
+"difficulty": 3,
+"time": 30000,
+"book_learn": [[ "textbook_anarch", 4 ] , [ "recipe_labchem", 3 ], ["textbook_chemistry", 5]],
+"qualities":[
+{"id":"BOIL","level":2}
+],
+"tools": [
+    [
+      [ "hotplate", 50 ],
+      [ "toolset", 50 ]
+    ]
+  ],
+"components": [
+[
+[ "chem_saltpetre", 50 ]
+],
+[
+[ "sugar", 50 ]
+]
+]
+},{
+  "type" : "recipe",
+  "result": "thyme_oil",
+  "category": "CC_OTHER",
+  "subcategory": "CSC_OTHER_MEDICAL",
+  "skill_used": "cooking",
+  "skills_required": [ "survival", 4 ],
+  "difficulty": 4,
+  "time": 60000,
+  "autolearn": true,
+  "qualities":[
+    {"id":"HAMMER","level":1},
+    {"id":"CUT","level":1},
+    {"id":"BOIL","level":2}
+  ],
+  "tools": [
+    [
+      [ "hotplate", 10 ],
+      [ "toolset", 10 ],
+      [ "fire", -1 ]
+    ]
+  ],
+  "components": [
+    [ [ "cooking_oil", 2 ] ],
+    [ [ "thyme", 2 ] ]
   ]
 }
 ]

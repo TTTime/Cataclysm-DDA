@@ -1,18 +1,16 @@
-#include <string>
-#include <iostream>
-#include <iterator>
-#include <sstream>
-#include <fstream>
-#include <map>
-#include <vector>
+#include "iuse_software_sokoban.h"
 
 #include "output.h"
 #include "input.h"
 #include "catacharset.h"
-#include "options.h"
 #include "debug.h"
-#include "iuse_software_sokoban.h"
 #include "path_info.h"
+#include "translations.h"
+#include "cata_utility.h"
+
+#include <iostream>
+#include <iterator>
+#include <sstream>
 
 sokoban_game::sokoban_game()
 {
@@ -21,24 +19,24 @@ sokoban_game::sokoban_game()
 void sokoban_game::print_score(WINDOW *w_sokoban, int iScore, int iMoves)
 {
     std::stringstream ssTemp;
-    ssTemp << _("Level: ") << iCurrentLevel + 1 << "/" << iNumLevel << "    ";
+    ssTemp << string_format(_("Level: %d/%d"), iCurrentLevel + 1, iNumLevel) << "    ";
     mvwprintz(w_sokoban, 1, 3, c_white, ssTemp.str().c_str());
 
     ssTemp.str("");
-    ssTemp << _("Score: ") << iScore;
+    ssTemp << string_format(_("Score: %d"), iScore);
     mvwprintz(w_sokoban, 2, 3, c_white, ssTemp.str().c_str());
 
     ssTemp.str("");
-    ssTemp << _("Moves: ") << iMoves << "    ";
+    ssTemp << string_format(_("Moves: %d"), iMoves) << "    ";
     mvwprintz(w_sokoban, 3, 3, c_white, ssTemp.str().c_str());
 
     ssTemp.str("");
-    ssTemp << _("Total moves: ") << iTotalMoves;
+    ssTemp << string_format(_("Total moves: %d"), iTotalMoves);
     mvwprintz(w_sokoban, 4, 3, c_white, ssTemp.str().c_str());
 
 }
 
-bool sokoban_game::parse_level()
+void sokoban_game::parse_level( std::istream &fin )
 {
     /*
     # Wall
@@ -56,14 +54,6 @@ bool sokoban_game::parse_level()
     vLevel.clear();
     vUndo.clear();
     vLevelDone.clear();
-
-    std::ifstream fin;
-    fin.open(std::string(FILENAMES["sokoban"]).c_str());
-    if(!fin.is_open()) {
-        fin.close();
-        debugmsg("Could not read \"%s\".", FILENAMES["sokoban"].c_str());
-        return false;
-    }
 
     std::string sLine;
     while(!fin.eof()) {
@@ -97,9 +87,8 @@ bool sokoban_game::parse_level()
                     mLevelInfo[iNumLevel]["PlayerY"] = mLevelInfo[iNumLevel]["MaxLevelY"];
                     mLevelInfo[iNumLevel]["PlayerX"] = i;
                 } else {
-                    //2 @ found error!
-                    fin.close();
-                    return false;
+                    // TODO: describe why it's invalid
+                    throw std::runtime_error( "invalid content of sokoban file" );
                 }
             }
 
@@ -112,10 +101,6 @@ bool sokoban_game::parse_level()
 
         mLevelInfo[iNumLevel]["MaxLevelY"]++;
     }
-
-    fin.close();
-
-    return true;
 }
 
 int sokoban_game::get_wall_connection(const int iY, const int iX)
@@ -195,15 +180,14 @@ void sokoban_game::draw_level(WINDOW *w_sokoban)
     const int iOffsetX = (FULL_SCREEN_WIDTH - 2 - mLevelInfo[iCurrentLevel]["MaxLevelX"]) / 2;
     const int iOffsetY = (FULL_SCREEN_HEIGHT - 2 - mLevelInfo[iCurrentLevel]["MaxLevelY"]) / 2;
 
-    for (std::map<int, std::map<int, std::string> >::iterator iterY = mLevel.begin();
-         iterY != mLevel.end(); ++iterY) {
-        for (std::map<int, std::string>::iterator iterX = (iterY->second).begin();
-             iterX != (iterY->second).end(); ++iterX) {
+    for( auto &elem : mLevel ) {
+        for( std::map<int, std::string>::iterator iterX = ( elem.second ).begin();
+             iterX != ( elem.second ).end(); ++iterX ) {
             std::string sTile = iterX->second;
 
             if (sTile == "#") {
-                mvwputch(w_sokoban, iOffsetY + (iterY->first), iOffsetX + (iterX->first), c_white,
-                         get_wall_connection(iterY->first, iterX->first));
+                mvwputch( w_sokoban, iOffsetY + ( elem.first ), iOffsetX + ( iterX->first ),
+                          c_white, get_wall_connection( elem.first, iterX->first ) );
 
             } else {
                 nc_color cCol = c_white;
@@ -224,7 +208,8 @@ void sokoban_game::draw_level(WINDOW *w_sokoban)
                     sTile = "@";
                 }
 
-                mvwprintz(w_sokoban, iOffsetY + (iterY->first), iOffsetX + (iterX->first), cCol, sTile.c_str());
+                mvwprintz( w_sokoban, iOffsetY + ( elem.first ), iOffsetX + ( iterX->first ), cCol,
+                           sTile.c_str() );
             }
         }
     }
@@ -232,8 +217,8 @@ void sokoban_game::draw_level(WINDOW *w_sokoban)
 
 bool sokoban_game::check_win()
 {
-    for (size_t i = 0; i < vLevelDone[iCurrentLevel].size(); i++) {
-        if (mLevel[vLevelDone[iCurrentLevel][i].first][vLevelDone[iCurrentLevel][i].second] != "*") {
+    for( auto &elem : vLevelDone[iCurrentLevel] ) {
+        if( mLevel[elem.first][elem.second] != "*" ) {
             return false;
         }
     }
@@ -251,12 +236,12 @@ int sokoban_game::start_game()
     const int iOffsetX = (TERMX > FULL_SCREEN_WIDTH) ? (TERMX - FULL_SCREEN_WIDTH) / 2 : 0;
     const int iOffsetY = (TERMY > FULL_SCREEN_HEIGHT) ? (TERMY - FULL_SCREEN_HEIGHT) / 2 : 0;
 
-    parse_level();
+    using namespace std::placeholders;
+    read_from_file( FILENAMES["sokoban"], std::bind( &sokoban_game::parse_level, this, _1 ) );
 
     WINDOW *w_sokoban = newwin(FULL_SCREEN_HEIGHT, FULL_SCREEN_WIDTH, iOffsetY, iOffsetX);
-    draw_border(w_sokoban);
-    center_print(w_sokoban, 0, hilite(c_white), _("Sokoban"));
-
+    WINDOW_PTR w_sokobanptr( w_sokoban );
+    draw_border( w_sokoban, BORDER_COLOR, _( "Sokoban" ), hilite( c_white ) );
     input_context ctxt("SOKOBAN");
     ctxt.register_cardinal();
     ctxt.register_action("NEXT");
@@ -274,8 +259,8 @@ int sokoban_game::start_game()
     shortcuts.push_back(_("<u>ndo move")); // 'u': undo move
 
     int indent = 10;
-    for (size_t i = 0; i < shortcuts.size(); i++) {
-        indent = std::max(indent, utf8_width(shortcuts[i].c_str()) + 1);
+    for( auto &shortcut : shortcuts ) {
+        indent = std::max( indent, utf8_width(shortcut) + 1 );
     }
     indent = std::min(indent, 30);
 

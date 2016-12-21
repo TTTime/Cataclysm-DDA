@@ -1,9 +1,15 @@
-#ifndef _FIELD_H_
-#define _FIELD_H_
+#ifndef FIELD_H
+#define FIELD_H
+
+#include "game_constants.h"
+#include "color.h"
 
 #include <vector>
 #include <string>
+#include <map>
 #include <iosfwd>
+
+enum phase_id : int;
 
 /*
 struct field_t
@@ -14,30 +20,41 @@ struct field_t {
     // internal ident, used for tileset and for serializing,
     // should be the same as the entry in field_id below (e.g. "fd_fire").
     std::string id;
- std::string name[3]; //The display name of the given density (ie: light smoke, smoke, heavy smoke)
+
+     /** Display name for field at given density (eg. light smoke, smoke, heavy smoke) */
+     std::string name[ MAX_FIELD_DENSITY ];
+
  char sym; //The symbol to draw for this field. Note that some are reserved like * and %. You will have to check the draw function for specifics.
- int priority; //Inferior numbers have lower priority. 0 is "ground" (splatter), 2 is "on the ground" (rubble), 4 is "above the ground" (fire), 6 is reserved for furniture, and 8 is "in the air" (smoke).
- nc_color color[3]; //The color the field will be drawn as on the screen, by density.
+ int priority; //Inferior numbers have lower priority. 0 is "ground" (splatter), 2 is "on the ground", 4 is "above the ground" (fire), 6 is reserved for furniture, and 8 is "in the air" (smoke).
 
- /*
- If true, does not invoke a check to block line of sight. If false, may block line of sight.
- Note that this does nothing by itself. You must go to the code block in lightmap.cpp and modify
- transparancy code there with a case statement as well!
- */
- bool transparent[3];
+     /** Color the field will be drawn as on the screen at a given density */
+     nc_color color[ MAX_FIELD_DENSITY ];
 
- //Dangerous tiles ask you before you step in them.
- bool dangerous[3];
+     /**
+      * If false this field may block line of sight.
+      * @warning this does nothing by itself. You must go to the code block in lightmap.cpp and modify
+      * transparancy code there with a case statement as well!
+     **/
+     bool transparent[ MAX_FIELD_DENSITY ];
+
+     /** Where tile is dangerous (prompt before moving into) at given density */
+     bool dangerous[ MAX_FIELD_DENSITY ];
 
  //Controls, albeit randomly, how long a field of a given type will last before going down in density.
  int halflife; // In turns
 
- //cost of moving into and out of this field
- int move_cost[3];
+     /** cost of moving into and out of this field at given density */
+    int move_cost[ MAX_FIELD_DENSITY ];
+
+    /** Does it penetrate obstacles like gas, spread like liquid or just lie there like solid? */
+    phase_id phase;
+
+    /** Should it decay with out-of-bubble time too? */
+    bool accelerated_decay;
 };
 
 //The master list of id's for a field, corresponding to the fieldlist array.
-enum field_id {
+enum field_id : int {
  fd_null = 0,
  fd_blood,
  fd_bile,
@@ -78,6 +95,12 @@ enum field_id {
  fd_bees,
  fd_incendiary,
  fd_relax_gas,
+ fd_fungal_haze,
+ fd_hot_air1,
+ fd_hot_air2,
+ fd_hot_air3,
+ fd_hot_air4,
+ fd_fungicidal_gas,
  num_fields
 };
 
@@ -92,12 +115,15 @@ extern field_t fieldlist[num_fields];
  */
 extern field_id field_from_ident(const std::string &field_ident);
 
-/*
-Class: field_entry
-An active or passive effect existing on a tile. Multiple different types can exist on one tile
-but there can be only one of each type (IE: one fire, one smoke cloud, etc). Each effect
-can vary in intensity (density) and age (usually used as a time to live).
-*/
+/**
+ * Returns if the field has at least one intensity for which dangerous[intensity] is true.
+ */
+bool field_type_dangerous( field_id id );
+
+/**
+ * An active or passive effect existing on a tile.
+ * Each effect can vary in intensity (density) and age (usually used as a time to live).
+ */
 class field_entry {
 public:
     field_entry() {
@@ -137,8 +163,10 @@ public:
     //Allows you to modify the age of the current field entry.
     int setFieldAge(const int new_age);
 
-    //Get the move cost for this field
-    int getFieldMoveCost();
+    /** Adds a number to current age. */
+    int mod_age( int mod ) {
+        return setFieldAge( getFieldAge() + mod );
+    }
 
     //Returns if the current field is dangerous or not.
     bool is_dangerous() const
@@ -158,6 +186,11 @@ public:
         return is_alive;
     }
 
+    bool decays_on_actualize() const
+    {
+        return fieldlist[type].accelerated_decay;
+    }
+
 private:
     field_id type; //The field identifier.
     int density; //The density, or intensity (higher is stronger), of the field entry.
@@ -165,54 +198,81 @@ private:
     bool is_alive; //True if this is an active field, false if it should be destroyed next check.
 };
 
-//Represents a variable sized collection of field entries on a given map square.
+/**
+ * A variable sized collection of field entries on a given map square.
+ * It contains one (at most) entry of each field type (e. g. one smoke entry and one
+ * fire entry, but not two fire entries).
+ * Use @ref findField to get the field entry of a specific type, or iterate over
+ * all entries via @ref begin and @ref end (allows range based iteration).
+ * There is @ref fieldSymbol to specific which field should be drawn on the map.
+*/
 class field{
 public:
-    //Field constructor
     field();
-    //Frees all memory assigned to the field's field_entry vector and general cleanup.
     ~field();
 
-    //Returns a field entry corresponding to the field_id parameter passed in.
-    //If no fields are found then a field_entry with type fd_null is returned.
+    /**
+     * Returns a field entry corresponding to the field_id parameter passed in.
+     * If no fields are found then nullptr is returned.
+     */
     field_entry* findField(const field_id field_to_find);
-    const field_entry* findFieldc(const field_id field_to_find); //for when you want a const field_entry.
+    /**
+     * Returns a field entry corresponding to the field_id parameter passed in.
+     * If no fields are found then nullptr is returned.
+     */
+    const field_entry* findFieldc(const field_id field_to_find) const;
+    /**
+     * Returns a field entry corresponding to the field_id parameter passed in.
+     * If no fields are found then nullptr is returned.
+     */
+    const field_entry* findField(const field_id field_to_find) const;
 
-    //Inserts the given field_id into the field list for a given tile if it does not already exist.
-    //Returns false if the field_id already exists, true otherwise.
-    //If you wish to modify an already existing field use findField and modify the result.
-    //Density defaults to 1, and age to 0 (permanent) if not specified.
+    /**
+     * Inserts the given field_id into the field list for a given tile if it does not already exist.
+     * If you wish to modify an already existing field use findField and modify the result.
+     * Density defaults to 1, and age to 0 (permanent) if not specified.
+     * The density is added to an existing field entry, but the age is only used for newly added entries.
+     * @return false if the field_id already exists, true otherwise.
+     */
     bool addField(const field_id field_to_add,const int new_density = 1, const int new_age = 0);
 
-    //Removes the field entry with a type equal to the field_id parameter. Returns the next iterator.
-    std::map<field_id, field_entry*>::iterator removeField(const field_id field_to_remove);
+    /**
+     * Removes the field entry with a type equal to the field_id parameter.
+     * Make sure to decrement the field counter in the submap if (and only if) the
+     * function returns true.
+     * @return True if the field was removed, false if it did not exist in the first place.
+     */
+    bool removeField( field_id field_to_remove );
+    /**
+     * Make sure to decrement the field counter in the submap.
+     * Removes the field entry, the iterator must point into @ref field_list and must be valid.
+     */
+    void removeField( std::map<field_id, field_entry>::iterator );
 
     //Returns the number of fields existing on the current tile.
     unsigned int fieldCount() const;
 
-    //Returns the last added field from the tile for drawing purposes.
-    //This can be changed to return whatever you think the most important field to draw is.
+    /**
+     * Returns the id of the field that should be drawn.
+     */
     field_id fieldSymbol() const;
 
-    std::map<field_id, field_entry*>::iterator replaceField(field_id old_field, field_id new_field);
-
     //Returns the vector iterator to begin searching through the list.
-    //Note: If you are using "field_at" function, set the return to a temporary field variable! If you somehow
-    //query an out of bounds field location it returns a different field every inquery. This means that
-    //the start and end iterators won't match up and will crash the system.
-    std::map<field_id, field_entry*>::iterator getFieldStart();
+    std::map<field_id, field_entry>::iterator begin();
+    std::map<field_id, field_entry>::const_iterator begin() const;
 
     //Returns the vector iterator to end searching through the list.
-    std::map<field_id, field_entry*>::iterator getFieldEnd();
+    std::map<field_id, field_entry>::iterator end();
+    std::map<field_id, field_entry>::const_iterator end() const;
 
-    //Returns the total move cost from all fields
+    /**
+     * Returns the total move cost from all fields.
+     */
     int move_cost() const;
 
-    std::map<field_id, field_entry*>& getEntries();
-    std::map<field_id, field_entry*> field_list; //A pointer lookup table of all field effects on the current tile.
 private:
-    //Draw_symbol currently is equal to the last field added to the square. You can modify this behavior in the class functions if you wish.
+    std::map<field_id, field_entry> field_list; //A pointer lookup table of all field effects on the current tile.    //Draw_symbol currently is equal to the last field added to the square. You can modify this behavior in the class functions if you wish.
     field_id draw_symbol;
-    bool dirty; //true if this is a copy of the class, false otherwise.
 };
+
 #endif

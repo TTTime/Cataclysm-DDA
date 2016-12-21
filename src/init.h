@@ -1,74 +1,13 @@
-#ifndef _INIT_H_
-#define _INIT_H_
+#ifndef INIT_H
+#define INIT_H
 
 #include "json.h"
 
 #include <string>
 #include <vector>
-
-//********** Functor Base, Static and Class member accessors
-class TFunctor
-{
-    public:
-        virtual void operator ()(JsonObject &jo) = 0; // virtual () operator
-        virtual void Call(JsonObject &jo) = 0; // what will be getting called
-        virtual ~TFunctor() {};
-};
-
-class StaticFunctionAccessor : public TFunctor
-{
-    private:
-        void (*_fptr)(JsonObject &jo);
-
-    public:
-        virtual void operator()(JsonObject &jo)
-        {
-            (*_fptr)(jo);
-        }
-        virtual void Call(JsonObject &jo)
-        {
-            (*_fptr)(jo);
-        }
-
-        StaticFunctionAccessor(void (*fptr)(JsonObject &jo))
-        {
-            _fptr = fptr;
-        }
-
-        ~StaticFunctionAccessor()
-        {
-            _fptr = NULL;
-        }
-};
-template <class TClass> class ClassFunctionAccessor : public TFunctor
-{
-    private:
-        void (TClass::*_fptr)(JsonObject &jo);
-        TClass *ptr_to_obj;
-
-    public:
-        virtual void operator()(JsonObject &jo)
-        {
-            (*ptr_to_obj.*_fptr)(jo);
-        }
-        virtual void Call(JsonObject &jo)
-        {
-            (*ptr_to_obj.*_fptr)(jo);
-        }
-
-        ClassFunctionAccessor(TClass *ptr2obj, void (TClass::*fptr)(JsonObject &jo))
-        {
-            ptr_to_obj = ptr2obj;
-            _fptr = fptr;
-        }
-
-        ~ClassFunctionAccessor()
-        {
-            _fptr = NULL;
-            ptr_to_obj = NULL;
-        }
-};
-//********** END - Functor Base, Static and Class member accessors
+#include <list>
+#include <memory>
+#include <functional>
 
 /**
  * This class is used to load (and unload) the dynamic
@@ -95,11 +34,8 @@ template <class TClass> class ClassFunctionAccessor : public TFunctor
  * Porting stuff to json works like this:
  * - create a function
  *       void load_my_object(JsonObject &jo);
- * - Or a class member function:
- *       TMyClass::load_my_object(JsonObject &jo);
- * - Or create a new class derived from @ref TFunctor
- * - Add a pointer to this function to @ref type_function_map
- * in the function @ref initialize (see there).
+ * - Add an entry to @ref type_function_map (inside of @ref initialize)
+ *   that calls the new function.
  * - Inside that function load the data from the json object.
  * You must also provide a reset function and add a call to
  * that function in @ref unload_data
@@ -113,8 +49,15 @@ class DynamicDataLoader
 {
     public:
         typedef std::string type_string;
-        typedef std::map<type_string, TFunctor *> t_type_function_map;
+        typedef std::map<type_string, std::function<void( JsonObject &, const std::string & )>>
+                t_type_function_map;
         typedef std::vector<std::string> str_vec;
+
+        /**
+         * JSON data dependent upon as-yet unparsed definitions
+         * first: JSON data, second: source identifier
+         */
+        typedef std::list<std::pair<std::string, std::string>> deferred_json;
 
     protected:
         /**
@@ -122,22 +65,22 @@ class DynamicDataLoader
          * functor that loads that kind of object from json.
          */
         t_type_function_map type_function_map;
+        void add( const std::string &type, std::function<void( JsonObject & )> f );
+        void add( const std::string &type, std::function<void( JsonObject &, const std::string & )> f );
         /**
          * Load all the types from that json data.
          * @param jsin Might contain single object,
          * or an array of objects. Each object must have a
          * "type", that is part of the @ref type_function_map
-         * @throws std::string on all kind of errors. The string
-         * contains the error message.
+         * @throws std::exception on all kind of errors.
          */
-        void load_all_from_json(JsonIn &jsin);
+        void load_all_from_json( JsonIn &jsin, const std::string &src );
         /**
          * Load a single object from a json object.
          * @param jo The json object to load the C++-object from.
-         * @throws std::string on all kind of errors. The string
-         * contains the error message.
+         * @throws std::exception on all kind of errors.
          */
-        void load_object(JsonObject &jo);
+        void load_object( JsonObject &jo, const std::string &src );
 
         DynamicDataLoader();
         ~DynamicDataLoader();
@@ -145,11 +88,6 @@ class DynamicDataLoader
          * Initializes @ref type_function_map
          */
         void initialize();
-        /**
-         * Clears and deletes the contents of
-         * @ref type_function_map
-         */
-        void reset();
         /**
          * Check the consistency of all the loaded data.
          * May print a debugmsg if something seems wrong.
@@ -167,10 +105,9 @@ class DynamicDataLoader
          * @param path Either a folder (recursively load all
          * files with the extension .json), or a file (load only
          * that file, don't check extension).
-         * @throws std::string on all kind of errors. The string
-         * contains the error message.
+         * @throws std::exception on all kind of errors.
          */
-        void load_data_from_path(const std::string &path);
+        void load_data_from_path( const std::string &path, const std::string &src );
         /**
          * Deletes and unloads all the data previously loaded with
          * @ref load_data_from_path
@@ -184,8 +121,14 @@ class DynamicDataLoader
          * @ref check_consistency
          */
         void finalize_loaded_data();
+
+        /**
+         * Loads and then removes entries from @param data
+         * @return whether all entries were sucessfully loaded
+         */
+        bool load_deferred( deferred_json &data );
 };
 
 void init_names();
 
-#endif // _INIT_H_
+#endif

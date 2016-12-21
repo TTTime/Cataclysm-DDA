@@ -3,12 +3,13 @@
 #include "output.h"
 #include "color.h"
 #include "catacharset.h"
+#include "animation.h"
 
 #include <cstring> // strlen
 
 /**
- * Whoever cares, btw. not my base design, buit this is how it works:
- * In absent of a native curses libaray, this is a simple implemention to
+ * Whoever cares, btw. not my base design, but this is how it works:
+ * In absent of a native curses library, this is a simple implementation to
  * store the data that would be given to the curses system.
  * It is later displayed using code in sdltiles.cpp. This file only contains
  * the curses interface.
@@ -30,8 +31,11 @@
 
 WINDOW *mainwin;
 WINDOW *stdscr;
-pairs *colorpairs;   //storage for pair'ed colored, should be dynamic, meh
+std::array<pairs, 100> colorpairs;   //storage for pair'ed colored
 int echoOn;     //1 = getnstr shows input, 0 = doesn't show. needed for echo()-ncurses compatibility.
+
+// allow extra logic for framebuffer clears
+extern void handle_additional_window_clear( WINDOW* win );
 
 //***********************************
 //Pseudo-Curses Functions           *
@@ -40,7 +44,13 @@ int echoOn;     //1 = getnstr shows input, 0 = doesn't show. needed for echo()-n
 //Basic Init, create the font, backbuffer, etc
 WINDOW *initscr(void)
 {
-    stdscr = curses_init();
+    // initscr is a ncurses function, it is not supposed to throw.
+    try {
+        stdscr = curses_init();
+    } catch( const std::exception &err ) {
+        fprintf( stderr, "Error while initializing: %s\n", err.what() );
+        return nullptr;
+    }
     return stdscr;
 }
 
@@ -114,6 +124,9 @@ inline void addedchar(WINDOW *win)
 int wborder(WINDOW *win, chtype ls, chtype rs, chtype ts, chtype bs, chtype tl, chtype tr,
             chtype bl, chtype br)
 {
+    if( win == nullptr ) {
+        return 1;
+    }
     int i, j;
     int oldx = win->cursorx; //methods below move the cursor, save the value!
     int oldy = win->cursory; //methods below move the cursor, save the value!
@@ -253,7 +266,7 @@ int mvwvline(WINDOW *win, int y, int x, chtype ch, int n)
 //Refreshes a window, causing it to redraw on top.
 int wrefresh(WINDOW *win)
 {
-    if (win->draw) {
+    if( win != nullptr && win->draw ) {
         curses_drawwindow(win);
     }
     return 1;
@@ -263,6 +276,16 @@ int wrefresh(WINDOW *win)
 int refresh(void)
 {
     return wrefresh(mainwin);
+}
+
+int wredrawln( WINDOW* /*win*/, int /*beg_line*/, int /*num_lines*/ ) {
+    /**
+     * This is a no-op for non-curses implementations. wincurse.cpp doesn't
+     * use windows console for rendering, and sdltiles.cpp doesn't either.
+     * If we had a console-based windows implementation, we'd need to do
+     * something here to force the line to redraw.
+     */
+    return OK;
 }
 
 int getch(void)
@@ -327,14 +350,14 @@ int getnstr(char *str, int size)
 
 // Get a sequence of Unicode code points, store them in target
 // return the display width of the extracted string.
-inline int fill(char *&fmt, int &len, std::string &target)
+inline int fill(const char *&fmt, int &len, std::string &target)
 {
-    char *const start = fmt;
+    const char *const start = fmt;
     int dlen = 0; // display width
     const char *tmpptr = fmt; // pointer for UTF8_getch, which increments it
     int tmplen = len;
     while( tmplen > 0 ) {
-        const unsigned ch = UTF8_getch(&tmpptr, &tmplen);
+        const uint32_t ch = UTF8_getch(&tmpptr, &tmplen);
         // UNKNOWN_UNICODE is most likely a (vertical/horizontal) line or similar
         const int cw = (ch == UNKNOWN_UNICODE) ? 1 : mk_wcwidth(ch);
         if( cw > 0 && dlen > 0 ) {
@@ -346,7 +369,7 @@ inline int fill(char *&fmt, int &len, std::string &target)
             // Newlines at the begin of a sequence are handled in printstring
             target.assign( " ", 1 );
             len = tmplen;
-            fmt = const_cast<char *>(tmpptr);
+            fmt = tmpptr;
             return 1; // the space
         } else if( cw == -1 ) {
             // Control character but behind some other characters, finish the sequence.
@@ -354,7 +377,7 @@ inline int fill(char *&fmt, int &len, std::string &target)
             // or by the next call to this function (replaced with a space).
             break;
         }
-        fmt = const_cast<char *>(tmpptr);
+        fmt = tmpptr;
         dlen += cw;
     }
     target.assign(start, fmt - start);
@@ -374,13 +397,14 @@ inline cursecell *cur_cell(WINDOW *win)
 }
 
 //The core printing function, prints characters to the array, and sets colors
-inline int printstring(WINDOW *win, char *fmt)
+inline int printstring(WINDOW *win, const std::string &text)
 {
     win->draw = true;
-    int len = strlen(fmt);
+    int len = text.length();
     if( len == 0 ) {
         return 1;
     }
+    const char *fmt = text.c_str();
     // avoid having an invalid cursorx, so that cur_cell will only return nullptr
     // when the bottom of the window has been reached.
     if( win->cursorx >= win->width ) {
@@ -414,7 +438,14 @@ inline int printstring(WINDOW *win, char *fmt)
             curcell->BG = win->BG;
             addedchar( win );
         }
-        if( dlen == 2 ) {
+        if( dlen == 1 ) {
+            // a wide character was converted to a narrow character leaving a null in the
+            // following cell ~> clear it
+            cursecell *seccell = cur_cell( win );
+            if (seccell && seccell->ch.empty()) {
+                seccell->ch.assign(' ', 1);
+            }
+        } else if( dlen == 2 ) {
             // the second cell, per definition must be empty
             cursecell *seccell = cur_cell( win );
             if( seccell == nullptr ) {
@@ -430,7 +461,7 @@ inline int printstring(WINDOW *win, char *fmt)
             addedchar( win );
             // Have just written a wide-character into the last cell, it would not
             // display correctly if it was the last *cell* of a line
-            if( win->cursorx == 0 ) {
+            if( win->cursorx == 1 ) {
                 // So make that last cell a space, move the width
                 // character in the first cell of the line
                 seccell->ch = curcell->ch;
@@ -453,10 +484,13 @@ inline int printstring(WINDOW *win, char *fmt)
 //Prints a formatted string to a window at the current cursor, base function
 int wprintw(WINDOW *win, const char *fmt, ...)
 {
+    if( win == nullptr ) {
+        return 1;
+    }
+
     va_list args;
     va_start(args, fmt);
-    char printbuf[2048];
-    vsnprintf(printbuf, 2047, fmt, args);
+    const std::string printbuf = vstring_format(fmt, args);
     va_end(args);
     return printstring(win, printbuf);
 }
@@ -464,10 +498,13 @@ int wprintw(WINDOW *win, const char *fmt, ...)
 //Prints a formatted string to a window, moves the cursor
 int mvwprintw(WINDOW *win, int y, int x, const char *fmt, ...)
 {
+    if( win == nullptr ) {
+        return 1;
+    }
+
     va_list args;
     va_start(args, fmt);
-    char printbuf[2048];
-    vsnprintf(printbuf, 2047, fmt, args);
+    const std::string printbuf = vstring_format(fmt, args);
     va_end(args);
     if (wmove(win, y, x) == 0) {
         return 0;
@@ -480,8 +517,7 @@ int mvprintw(int y, int x, const char *fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
-    char printbuf[2048];
-    vsnprintf(printbuf, 2047, fmt, args);
+    const std::string printbuf = vstring_format(fmt, args);
     va_end(args);
     if (move(y, x) == 0) {
         return 0;
@@ -494,8 +530,7 @@ int printw(const char *fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
-    char printbuf[2078];
-    vsnprintf(printbuf, 2047, fmt, args);
+    const std::string printbuf = vstring_format(fmt, args);
     va_end(args);
     return printstring(mainwin, printbuf);
 }
@@ -503,6 +538,10 @@ int printw(const char *fmt, ...)
 //erases a window of all text and attributes
 int werase(WINDOW *win)
 {
+    if( win == nullptr ) {
+        return 1;
+    }
+
     for (int j = 0; j < win->height; j++) {
         win->line[j].chars.assign(win->width, cursecell());
         win->line[j].touched = true;
@@ -510,6 +549,8 @@ int werase(WINDOW *win)
     win->draw = true;
     wmove(win, 0, 0);
     //    wrefresh(win);
+    handle_additional_window_clear( win );
+
     return 1;
 }
 
@@ -530,6 +571,10 @@ int init_pair(short pair, short f, short b)
 //moves the cursor in a window
 int wmove(WINDOW *win, int y, int x)
 {
+    if( win == nullptr ) {
+        return 1;
+    }
+
     if (x >= win->width) {
         return 0;   //FIXES MAP CRASH -> >= vs > only
     }
@@ -578,6 +623,10 @@ int wclear(WINDOW *win)
 
 int clearok(WINDOW *win)
 {
+    if( win == nullptr ) {
+        return 1;
+    }
+
     for (int i = 0; i < win->y && i < stdscr->height; i++) {
         stdscr->line[i].touched = true;
     }
@@ -587,42 +636,48 @@ int clearok(WINDOW *win)
 //gets the max x of a window (the width)
 int getmaxx(WINDOW *win)
 {
-    return win->width;
+    return win != nullptr ? win->width : 0;
 }
 
 //gets the max y of a window (the height)
 int getmaxy(WINDOW *win)
 {
-    return win->height;
+    return win != nullptr ? win->height : 0;
 }
 
 //gets the beginning x of a window (the x pos)
 int getbegx(WINDOW *win)
 {
-    return win->x;
+    return win != nullptr ? win->x : 0;
 }
 
 //gets the beginning y of a window (the y pos)
 int getbegy(WINDOW *win)
 {
-    return win->y;
+    return win != nullptr ? win->y : 0;
 }
 
 //gets the current cursor x position in a window
 int getcurx(WINDOW *win)
 {
-    return win->cursorx;
+    return win != nullptr ? win->cursorx : 0;
 }
 
 //gets the current cursor y position in a window
 int getcury(WINDOW *win)
 {
-    return win->cursory;
+    return win != nullptr ? win->cursory : 0;
 }
 
 int start_color(void)
 {
-    return curses_start_color();
+    // start_color is a ncurses function, it is not supposed to throw.
+    try {
+        return curses_start_color();
+    } catch( const std::exception &err ) {
+        fprintf( stderr, "Error loading color definitions: %s\n", err.what() );
+        return -1;
+    }
 }
 
 int keypad(WINDOW *, bool)
@@ -650,6 +705,10 @@ int mvaddch(int y, int x, const chtype ch)
 
 int wattron(WINDOW *win, int attrs)
 {
+    if( win == nullptr ) {
+        return 1;
+    }
+
     bool isBold = !!(attrs & A_BOLD);
     bool isBlink = !!(attrs & A_BLINK);
     int pairNumber = (attrs & A_COLOR) >> 17;
@@ -665,6 +724,10 @@ int wattron(WINDOW *win, int attrs)
 }
 int wattroff(WINDOW *win, int)
 {
+    if( win == nullptr ) {
+        return 1;
+    }
+
     win->FG = 8;                                //reset to white
     win->BG = 0;                                //reset to black
     return 1;
@@ -683,37 +746,37 @@ int waddch(WINDOW *win, const chtype ch)
     charcode = ch;
 
     switch (ch) {       //LINE_NESW  - X for on, O for off
-    case LINE_XOXO:   //#define LINE_XOXO 4194424
+    case LINE_XOXO:
         charcode = LINE_XOXO_C;
         break;
-    case LINE_OXOX:   //#define LINE_OXOX 4194417
+    case LINE_OXOX:
         charcode = LINE_OXOX_C;
         break;
-    case LINE_XXOO:   //#define LINE_XXOO 4194413
+    case LINE_XXOO:
         charcode = LINE_XXOO_C;
         break;
-    case LINE_OXXO:   //#define LINE_OXXO 4194412
+    case LINE_OXXO:
         charcode = LINE_OXXO_C;
         break;
-    case LINE_OOXX:   //#define LINE_OOXX 4194411
+    case LINE_OOXX:
         charcode = LINE_OOXX_C;
         break;
-    case LINE_XOOX:   //#define LINE_XOOX 4194410
+    case LINE_XOOX:
         charcode = LINE_XOOX_C;
         break;
-    case LINE_XXOX:   //#define LINE_XXOX 4194422
+    case LINE_XXOX:
         charcode = LINE_XXOX_C;
         break;
-    case LINE_XXXO:   //#define LINE_XXXO 4194420
+    case LINE_XXXO:
         charcode = LINE_XXXO_C;
         break;
-    case LINE_XOXX:   //#define LINE_XOXX 4194421
+    case LINE_XOXX:
         charcode = LINE_XOXX_C;
         break;
-    case LINE_OXXX:   //#define LINE_OXXX 4194423
+    case LINE_OXXX:
         charcode = LINE_OXXX_C;
         break;
-    case LINE_XXXX:   //#define LINE_XXXX 4194414
+    case LINE_XXXX:
         charcode = LINE_XXXX_C;
         break;
     default:
